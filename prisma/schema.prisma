@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  fulfilled
+  shipped
+  awaiting_shipment
+}
+
+enum PhoneModel {
+  iphonex
+  iphone11
+  iphone11pro
+  iphone11promax
+  iphone12
+  iphone13
+  iphone14
+  iphone15
+}
+
+enum CaseMaterial {
+  silicone
+  polycarbonate
+}
+
+enum CaseFinish {
+  smooth
+  textured
+}
+
+enum CaseColor {
+  black
+  blue
+  rose
+}
+enum CaseDesign {
+  solid_x            @map("/solid_x.png")
+  glitter_x          @map("/glitter_x.png")
+  solid_11           @map("/solid_11.png")
+  glitter_11         @map("/glitter_11.png")
+  solid_11_pro       @map("/solid_11_pro.png")
+  glitter_11_pro     @map("/glitter_11_pro.png")
+  solid_11_pro_max   @map("/solid_11_pro_max.png")
+  glitter_11_pro_max @map("/glitter_11_pro_max.png")
+  white_11_pro_max   @map("/white_11_pro_max.png")
+  multi_11_pro_max   @map("/multi_11_pro_max.png")
+}
+
+model Configuration {
+  id              String        @id @default(cuid())
+  width           Int
+  height          Int
+  imageUrl        String
+  color           CaseColor?
+  caseImg         CaseDesign?
+  model           PhoneModel?
+  material        CaseMaterial?
+  finish          CaseFinish?
+  croppedImageUrl String?
+  Order           Order[]
+}
+
+model User {
+  id    String  @id @default(cuid())
+  email String
+  Order Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id              String        @id @default(cuid())
+  configurationId String
+  configuration   Configuration @relation(fields: [configurationId], references: [id])
+  user            User          @relation(fields: [userId], references: [id])
+  userId          String
+  amount          Float
+  isPaid          Boolean       @default(false)
+  status          OrderStatus   @default(awaiting_shipment)
+
+  shippingAddress   ShippingAddress? @relation(fields: [shippingAddressId], references: [id])
+  shippingAddressId String?
+  billingAddress    BillingAddress?  @relation(fields: [billingAddressId], references: [id])
+  billingAddressId  String?
+
+  createdAt DateTime @default(now())
+  updated   DateTime @updatedAt
+}
+
+model ShippingAddress {
+  id          String  @id @default(cuid())
+  name        String
+  street      String
+  city        String
+  postalCode  String
+  country     String
+  state       String?
+  phoneNumber String?
+  orders      Order[]
+}
+
+model BillingAddress {
+  id          String  @id @default(cuid())
+  name        String
+  street      String
+  city        String
+  postalCode  String
+  country     String
+  state       String?
+  phoneNumber String?
+  orders      Order[]
+}
