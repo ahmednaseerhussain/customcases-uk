@@ -10,11 +10,7 @@
           { "key": "Access-Control-Expose-Headers", "value": "*" }
         ]
       }
-    ],
-    "functions": {
-      "api/route": {
-        "optionsAllowlist": ["/api/auth/logout"]
-      }
-    }
+    ]
+    
   }
   
