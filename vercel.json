@@ -1,14 +1,20 @@
 {
     "headers": [
-        {
-            "source": "/(.*)",
-            "headers": [
-                { "key": "Access-Control-Allow-Origin", "value": "https://customcases-uk.vercel.app" },
-                { "key": "Access-Control-Allow-Methods", "value": "GET,POST,OPTIONS,PUT,DELETE" },
-                { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" },
-                { "key": "Access-Control-Allow-Credentials", "value": "true" },
-                { "key": "Access-Control-Expose-Headers", "value": "*" }
-            ]
-        }
-    ]
-}
+      {
+        "source": "/(.*)",
+        "headers": [
+          { "key": "Access-Control-Allow-Origin", "value": "https://customcases-uk.vercel.app" },
+          { "key": "Access-Control-Allow-Methods", "value": "GET,POST,OPTIONS,PUT,DELETE" },
+          { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" },
+          { "key": "Access-Control-Allow-Credentials", "value": "true" },
+          { "key": "Access-Control-Expose-Headers", "value": "*" }
+        ]
+      }
+    ],
+    "functions": {
+      "api/route": {
+        "optionsAllowlist": ["/api/auth/logout"]
+      }
+    }
+  }
+  
