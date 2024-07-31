@@ -42,6 +42,6 @@ export function constructMetadata({
       creator: '@joshtriedcoding',
     },
     icons,
-    metadataBase: new URL("https://casecobra.vercel.app/")
+    metadataBase: new URL(`${process.env.NEXT_PUBLIC_SERVER_URL}`)
   }
 }
