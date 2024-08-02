@@ -1,8 +1,6 @@
-'use client'
-
+// app/auth-callback/page.tsx
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { getAuthStatus } from './actions'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 
@@ -15,9 +13,15 @@ const Page = () => {
     if (configurationId) setConfigId(configurationId)
   }, [])
 
-  const { data } = useQuery({
+  const { data, error } = useQuery({
     queryKey: ['auth-callback'],
-    queryFn: async () => await getAuthStatus(),
+    queryFn: async () => {
+      const response = await fetch('/api/auth-callback')
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return response.json()
+    },
     retry: true,
     retryDelay: 500,
   })
@@ -29,6 +33,10 @@ const Page = () => {
     } else {
       router.push('/')
     }
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>
   }
 
   return (
