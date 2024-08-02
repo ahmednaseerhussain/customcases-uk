@@ -1,4 +1,5 @@
 // app/auth-callback/page.tsx
+'use client'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
