@@ -1,38 +1,34 @@
-// /pages/api/auth-callback.ts
-
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/db'
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+export async function GET(req: NextRequest) {
+  try {
+    const { getUser } = getKindeServerSession()
+    const user = await getUser()
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+    if (!user?.id || !user.email) {
+      return NextResponse.json({ error: 'Invalid user data' }, { status: 400 })
+    }
 
-  const { getUser } = getKindeServerSession()
-  const user = await getUser()
-
-  if (!user?.id || !user.email) {
-    return res.status(400).json({ error: 'Invalid user data' });
-  }
-
-  const existingUser = await db.user.findFirst({
-    where: { id: user.id },
-  })
-
-  if (!existingUser) {
-    await db.user.create({
-      data: {
-        id: user.id,
-        email: user.email,
-      },
+    const existingUser = await db.user.findFirst({
+      where: { id: user.id },
     })
-  }
 
-  return res.status(200).json({ success: true });
+    if (!existingUser) {
+      await db.user.create({
+        data: {
+          id: user.id,
+          email: user.email,
+        },
+      })
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+    return NextResponse.json({ error: 'Unknown error' }, { status: 500 })
+  }
 }
