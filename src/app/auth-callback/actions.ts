@@ -1,12 +1,12 @@
-'use server'
+// /pages/api/auth-callback.ts
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/db'
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 
-export const getAuthStatus = async (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', 'https://customcases-uk.vercel.app');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
