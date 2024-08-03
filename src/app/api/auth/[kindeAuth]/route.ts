@@ -19,7 +19,7 @@ const authHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-// Apply allowCors correctly by passing authHandler directly
+// Apply allowCors to authHandler and export it directly
 const handler = allowCors(authHandler);
 
 export default handler;
