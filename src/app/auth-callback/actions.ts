@@ -3,6 +3,7 @@
 import { db } from '@/db'
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 
+
 export const getAuthStatus = async () => {
   const { getUser } = getKindeServerSession()
   const user = await getUser()
@@ -24,5 +25,5 @@ export const getAuthStatus = async () => {
     })
   }
 
-  return { success: true }
+  return { success: true, headers: {'Access-Control-Allow-Origin': '*'} }
 }
