@@ -5,6 +5,7 @@ import { db } from '@/db'
 import { stripe } from '@/lib/stripe'
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 import { Order } from '@prisma/client'
+import { headers } from 'next/headers'
 
 export const createCheckoutSession = async ({
   configId,
@@ -78,5 +79,5 @@ export const createCheckoutSession = async ({
     line_items: [{ price: product.default_price as string, quantity: 1 }],
   })
 
-  return { url: stripeSession.url }
+  return { url: stripeSession.url, headers: {'Access-Control-Allow-Origin': '*'} }
 }
