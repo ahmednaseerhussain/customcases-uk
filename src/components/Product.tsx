@@ -44,24 +44,25 @@ export function ProductCards() {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-4 py-20 justify-items-center">
       {products.map((product) => (
-        <Card key={product.id} className="w-[300px] justify-items-center">
-          <CardHeader>
+        <Card key={product.id} className="w-[250px] justify-items-center">
+          {/* <CardHeader>
             <CardTitle>{product.title}</CardTitle>
             <CardDescription>{product.description}</CardDescription>
-          </CardHeader>
-          <CardContent className="flex justify-center items-center" >
-            <img src={product.imageUrl} alt={product.title} className="w-[180px] h-[340px] justify-items-center" />
+          </CardHeader> */}
+          <CardContent className="flex justify-center items-center py-4" >
+            <img src={product.imageUrl} alt={product.title} className="w-[170px] h-[340px] justify-items-center" />
           </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button variant="outline">Details</Button>
+          <CardFooter className="flex justify-between ">
+            {/* <Button variant="outline">Details</Button> */}
             <Link
                   href='/configure/upload'
                   
                     
                     className='flex items-center gap-1 rounded-md bg-gradient-to-tr from-pink-300 to-blue-300 p-0.5 shadow-lg'
                     
+                    
                   >
-                  <button className="flex-1  bg-white px-2 py-1 rounded-md text-sm flex items-center gap-1">
+                  <button className="flex-1 bg-white px-2 py-1 rounded-md text-sm flex items-center gap-1">
                   Create case
                  <ArrowRight className='ml-1.5 h-5 w-5' />
                 </button>

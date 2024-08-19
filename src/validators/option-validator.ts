@@ -85,13 +85,14 @@ export const CASES = {
 
 
 export const COLORS = [
-  { label: 'Black', value: 'black', tw: 'zinc-900' },
+  { label: 'Black', value: 'black', tw: 'zinc-900', image: '/black.jpg' },
   {
     label: 'Blue',
     value: 'blue',
     tw: 'blue-950',
+    image: '/black.jpg'
   },
-  { label: 'Rose', value: 'rose', tw: 'rose-950' },
+  { label: 'Rose', value: 'rose', tw: 'rose-950', image: '/rose.jpg' },
 ] as const
 
 export const MODELS = {

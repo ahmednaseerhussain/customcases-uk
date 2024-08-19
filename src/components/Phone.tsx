@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { HTMLAttributes } from 'react';
+// import {caseImg} from '../app/configure/design/DesignConfigurator'
 
 interface CaseOption {
   label: string;
@@ -11,6 +12,7 @@ interface PhoneProps extends HTMLAttributes<HTMLDivElement> {
   dark?: boolean;
   
 }
+
 
 const Phone = ({ imgSrc, className, dark = false,  ...props }: PhoneProps) => {
   return (
@@ -38,5 +40,6 @@ const Phone = ({ imgSrc, className, dark = false,  ...props }: PhoneProps) => {
     </div>
   );
 };
+
 
 export default Phone;

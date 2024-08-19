@@ -4,7 +4,7 @@ import Phone from '@/components/Phone'
 import { Button } from '@/components/ui/button'
 import { BASE_PRICE, PRODUCT_PRICES } from '@/config/products'
 import { cn, formatPrice } from '@/lib/utils'
-import { COLORS, FINISHES, MODELS } from '@/validators/option-validator'
+import { MODELS } from '@/validators/option-validator'
 import { Configuration } from '@prisma/client'
 import { useMutation } from '@tanstack/react-query'
 import { ArrowRight, Check } from 'lucide-react'
@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation'
 import { useToast } from '@/components/ui/use-toast'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import LoginModal from '@/components/LoginModal'
+import NextImage from 'next/image'
 
 const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const router = useRouter()
@@ -24,11 +25,9 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false)
 
   const [showConfetti, setShowConfetti] = useState<boolean>(false)
-  useEffect(() => setShowConfetti(true))
+  useEffect(() => setShowConfetti(true), [])
 
-  const { color, model, finish, material } = configuration
-
-  const tw = COLORS.find((supportedColor) => supportedColor.value === color)?.tw
+  const { color, caseImg, model, finish, material } = configuration
 
   const { label: modelLabel } = MODELS.options.find(
     ({ value }) => value === model
@@ -81,10 +80,34 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
       <div className='mt-20 flex flex-col items-center md:grid text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12'>
         <div className='md:col-span-4 lg:col-span-3 md:row-span-2 md:row-end-2'>
-          <Phone
-            className={cn(`bg-${tw}`, "max-w-[150px] md:max-w-full")}
-            imgSrc={configuration.croppedImageUrl!}
-          />
+          <div className={cn('relative pointer-events-none z-50 overflow-hidden')}>
+            <div
+              className={cn(
+                'absolute inset-0 left-[3px] top-px right-[3px] bottom-px rounded-[32px]'
+              )}
+            >
+              <div className='absolute inset-0 -z-10'>
+                <NextImage
+                  src={`/${color}.jpg`}
+                  fill
+                  alt='your image'
+                  className='pointer-events-none rounded-[35px]'
+                />
+              </div>
+            </div>
+            <img
+              src={`/${caseImg}.png`}
+              className='pointer-events-none z-10 select-none inset-10'
+              alt='phone image'
+            />
+            <div className='absolute -z-10 inset-0'>
+              <img
+                className='object-cover min-w-full min-h-full rounded-[40px]'
+                src={configuration.croppedImageUrl!}
+                alt='overlaying phone image'
+              />
+            </div>
+          </div>
         </div>
 
         <div className='mt-6 sm:col-span-9 md:row-end-1'>
@@ -159,7 +182,8 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
             <div className='mt-8 flex justify-end pb-12'>
               <Button
                 onClick={() => handleCheckout()}
-                className='px-4 sm:px-6 lg:px-8'>
+                className='px-4 sm:px-6 lg:px-8'
+              >
                 Check out <ArrowRight className='h-4 w-4 ml-1.5 inline' />
               </Button>
             </div>

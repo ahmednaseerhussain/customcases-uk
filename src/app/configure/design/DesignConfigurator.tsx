@@ -7,6 +7,7 @@ import { cn, formatPrice } from '@/lib/utils'
 import NextImage from 'next/image'
 import { Rnd } from 'react-rnd'
 import { RadioGroup } from '@headlessui/react'
+import html2canvas from 'html2canvas';
 import { useEffect, useRef, useState } from 'react'
 import {
   CASES,
@@ -31,7 +32,9 @@ import { useMutation } from '@tanstack/react-query'
 import { saveConfig as _saveConfig, SaveConfigArgs } from './actions'
 import { useRouter } from 'next/navigation'
 import { CaseDesign } from '@prisma/client'
+import { Card } from '@/components/ui/card'
 // import { useCase } from './ContexCase'
+
 
 interface CaseOption {
   label: string;
@@ -68,6 +71,7 @@ const DesignConfigurator = ({
       })
     },
     onSuccess: () => {
+      
       router.push(`/configure/preview?id=${configId}`)
     },
   })
@@ -114,6 +118,8 @@ const DesignConfigurator = ({
         height,
       } = phoneCaseRef.current!.getBoundingClientRect()
 
+      
+
       const { left: containerLeft, top: containerTop } =
         containerRef.current!.getBoundingClientRect()
 
@@ -157,6 +163,9 @@ const DesignConfigurator = ({
       })
     }
   }
+ 
+
+  
 
   function base64ToBlob(base64: string, mimeType: string) {
     const byteCharacters = atob(base64)
@@ -184,34 +193,61 @@ const DesignConfigurator = ({
   //   }
   // };
   
+  
+  const [isFrameAdded, setIsFrameAdded] = useState(false);
 
+  const handleFrameSelection = (selection: boolean) => {
+    setIsFrameAdded(selection);
+  };
+
+  const savedImg = useRef(null);
+
+  const saveDivAsImage = async () => {
+    if (savedImg.current) {
+      const canvas = await html2canvas(savedImg.current);
+      const dataURL = canvas.toDataURL('image/png');
+      localStorage.setItem('divImage', dataURL);
+    }
+  };
   return (
     <div className='relative mt-20 grid grid-cols-1 lg:grid-cols-3 mb-20 pb-20'>
       <div
+        
         ref={containerRef}
         className='relative h-[37.5rem] overflow-hidden col-span-2 w-full max-w-4xl flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'>
-        <div className='relative w-60 bg-opacity-50 pointer-events-none aspect-[896/1831]'>
+        <div ref={savedImg} className='relative w-60 bg-opacity-50 pointer-events-none aspect-[896/1831]'>
           <AspectRatio
             ref={phoneCaseRef}
             ratio={896 / 1831}
             className='pointer-events-none relative z-50 aspect-[896/1831] w-full'>
+                
             <NextImage
               fill
               alt='phone image'
               src={options.caseImg.image}
               className='pointer-events-none z-50 select-none'
             />
+            
           </AspectRatio>
           <div className='absolute z-40 inset-0 left-[3px] top-px right-[3px] bottom-px rounded-[32px] shadow-[0_0_0_99999px_rgba(229,231,235,0.6)]' />
           <div
             className={cn(
               'absolute inset-0 left-[3px] top-px right-[3px] bottom-px rounded-[32px]',
-              `bg-${options.color.tw}`
+              // `bg-${options.color.tw}`
             )}
-          />
+            
+          >
+            <NextImage
+              src={options.color.image}
+              fill
+              alt='your image'
+              className='pointer-events-none rounded-[35px]'
+            />
+          </div>
         </div>
 
         <Rnd
+        
           default={{
             x: 150,
             y: 205,
@@ -230,7 +266,7 @@ const DesignConfigurator = ({
             const { x, y } = data
             setRenderedPosition({ x, y })
           }}
-          className='absolute z-20 border-[3px] border-primary'
+          className='absolute z-20 border-[3px] '
           lockAspectRatio
           resizeHandleComponent={{
             bottomRight: <HandleComponent />,
@@ -238,15 +274,33 @@ const DesignConfigurator = ({
             topRight: <HandleComponent />,
             topLeft: <HandleComponent />,
           }}>
+            
           <div className='relative w-full h-full'>
+            
             <NextImage
               src={imageUrl}
               fill
               alt='your image'
-              className='pointer-events-none'
+              className='pointer-events-none absolute inset-10'
             />
+            {isFrameAdded && (
+          <NextImage
+            src="/pngegg.png"
+            layout="fill"
+            objectFit="cover"
+            alt="your"
+            className="pointer-events-none absolute inset-0"
+          />
+        )}
+            
+            {/* <div className="absolute inset-0 flex bottom-[-200px] items-center justify-center text-black  font-bold font-rye">
+            Your Text Here
+          </div> */}
+            
           </div>
         </Rnd>
+        
+        
       </div>
 
       <div className='h-[37.5rem] w-full col-span-full lg:col-span-1 flex flex-col bg-white'>
@@ -260,7 +314,7 @@ const DesignConfigurator = ({
             <h2 className='tracking-tight font-bold text-3xl'>
               Customize your case
             </h2>
-
+            <button onClick={saveDivAsImage}>Save as Image</button>
             <div className='w-full h-px bg-zinc-200 my-6' />
 
             <div className='relative mt-4 h-full flex flex-col justify-between'>
@@ -297,7 +351,21 @@ const DesignConfigurator = ({
                     ))}
                   </div>
                 </RadioGroup>
-
+                <div className="relative flex flex-col gap-3 w-full">
+                  <Label>Add Frame</Label>
+                  <RadioGroup value={isFrameAdded} onChange={handleFrameSelection}>
+                    <div className="mt-3 flex items-center space-x-3">
+                      <RadioGroup.Option value={true} className={({ active, checked }) => cn('relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5', { 'ring-2 ring-offset-2 ring-primary': active || checked })}>
+                        <span className="h-8 w-8 rounded-full flex items-center justify-center border border-black border-opacity-10">Yes</span>
+                      </RadioGroup.Option>
+                      <RadioGroup.Option value={false} className={({ active, checked }) => cn('relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5', { 'ring-2 ring-offset-2 ring-primary': active || checked })}>
+                        <span className="h-8 w-8 rounded-full flex items-center justify-center border border-black border-opacity-10">No</span>
+                      </RadioGroup.Option>
+                    </div>
+                  </RadioGroup>
+                </div>
+                
+                      
                 <div className='relative flex flex-col gap-3 w-full'>
                   <Label>Model</Label>
                   <DropdownMenu>
@@ -337,44 +405,44 @@ const DesignConfigurator = ({
                   </DropdownMenu>
                 </div>
                 <div className='relative flex flex-col gap-3 w-full'>
-  <Label>Case</Label>
-  <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <Button
-        variant='outline'
-        role='combobox'
-        className='w-full justify-between'>
-        {options.caseImg.label}
-        <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
-      </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent>
-      {cases.map((caseOption) => (
-        <DropdownMenuItem
-          key={caseOption.label}
-          className={cn(
-            'flex text-sm gap-1 items-center p-1.5 cursor-default hover:bg-zinc-100',
-            {
-              'bg-zinc-100': caseOption.label === options.caseImg.label,
-            }
-          )}
-          onClick={() => {
-            setOptions((prev) => ({ ...prev, caseImg: caseOption }))
-          }}>
-          <Check
-            className={cn(
-              'mr-2 h-4 w-4',
-              caseOption.label === options.caseImg.label
-                ? 'opacity-100'
-                : 'opacity-0'
-            )}
-          />
-          {caseOption.label}
-        </DropdownMenuItem>
-      ))}
-    </DropdownMenuContent>
-  </DropdownMenu>
-</div>
+                  <Label>Case</Label>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant='outline'
+                        role='combobox'
+                        className='w-full justify-between'>
+                        {options.caseImg.label}
+                        <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      {cases.map((caseOption) => (
+                        <DropdownMenuItem
+                          key={caseOption.label}
+                          className={cn(
+                            'flex text-sm gap-1 items-center p-1.5 cursor-default hover:bg-zinc-100',
+                            {
+                              'bg-zinc-100': caseOption.label === options.caseImg.label,
+                            }
+                          )}
+                          onClick={() => {
+                            setOptions((prev) => ({ ...prev, caseImg: caseOption }))
+                          }}>
+                          <Check
+                            className={cn(
+                              'mr-2 h-4 w-4',
+                              caseOption.label === options.caseImg.label
+                                ? 'opacity-100'
+                                : 'opacity-0'
+                            )}
+                          />
+                          {caseOption.label}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
 
 
                 {[MATERIALS, FINISHES].map(
@@ -440,7 +508,9 @@ const DesignConfigurator = ({
               </div>
             </div>
           </div>
+          
         </ScrollArea>
+        
 
         <div className='w-full px-8 h-16 bg-white'>
           <div className='h-px w-full bg-zinc-200' />
@@ -452,6 +522,7 @@ const DesignConfigurator = ({
                     100
                 )}
               </p>
+              
               <Button
                 isLoading={isPending}
                 disabled={isPending}

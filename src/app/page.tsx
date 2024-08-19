@@ -1,5 +1,6 @@
 import { CarouselPlugin } from '@/components/Carousel'
 import { Icons } from '@/components/Icons'
+import BasicGrid from '@/components/item'
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import Phone from '@/components/Phone'
 import { ProductCards } from '@/components/Product'
@@ -21,29 +22,29 @@ export default function Home() {
                 {/* <div className='absolute inset-x-0 bottom-0 bg-gradient-to-t via-slate-50/50 from-slate-50 h-28' /> */}
                 <img src='/custom-2.png' className='w-full' />
               </div>
-              <h1 className='relative w-fit tracking-tight text-balance mt-16 font-bold !leading-tight text-gray-900 text-5xl md:text-6xl lg:text-7xl'>
+              <h1 className='relative w-fit tracking-tight text-balance mt-16 font-[200] !leading-tight text-gray-800 text-5xl md:text-6xl lg:text-7xl'>
                 Your Image on a{' '}
-                <span className='text-gradient'>Custom</span>{' '}
+                <span className='text-gradient font-[400]'>Custom</span>{' '}
                 Phone Case
               </h1>
-              <p className='mt-8 text-lg lg:pr-10 max-w-prose text-center lg:text-left text-balance md:text-wrap'>
+              <p className='mt-8 text-lg font-light lg:pr-10 max-w-prose text-center lg:text-left text-balance md:text-wrap'>
                 Capture your favorite memories with your own,{' '}
-                <span className='font-semibold'>one-of-one</span> phone case.
+                <span className='font-medium'>one-of-one</span> phone case.
                 CaseCobra allows you to protect your memories, not just your
                 phone case.
               </p>
 
-              <ul className='mt-8 space-y-2 text-left font-medium flex flex-col items-center sm:items-start'>
+              <ul className='mt-8 space-y-2 text-left font-light flex flex-col items-center sm:items-start'>
                 <div className='space-y-2'>
-                  <li className='flex gap-1.5 items-center text-left'>
+                  <li className='flex gap-1.5 items-center text-left italic'>
                     <Check className='h-5 w-5 shrink-0 text-pink-300' />
                     High-quality, durable material
                   </li>
-                  <li className='flex gap-1.5 items-center text-left'>
+                  <li className='flex gap-1.5 items-center text-left italic'>
                     <Check className='h-5 w-5 shrink-0 text-pink-300' />5 year
                     print guarantee
                   </li>
-                  <li className='flex gap-1.5 items-center text-left'>
+                  <li className='flex gap-1.5 items-center text-left italic'>
                     <Check className='h-5 w-5 shrink-0 text-pink-300' />
                     Modern iPhone models supported
                   </li>
@@ -90,8 +91,8 @@ export default function Home() {
                     
                   </div>
 
-                  <p>
-                    <span className='font-semibold'>1.250</span> happy customers
+                  <p className='font-light'>
+                    <span className='font-medium'>1.250</span> happy customers
                   </p>
                 </div>
               </div>
@@ -99,24 +100,33 @@ export default function Home() {
           
           </div>
 
-          <div className='col-span-full lg:col-span-1 w-full flex justify-center px-8 sm:px-16 md:px-0 mt-32 lg:mx-0 lg:mt-20 h-fit'>
+          <div className='col-span-full lg:col-span-1 w-full flex justify-center px-8 sm:px-16 md:px-0 mt-3 lg:mx-0 lg:-mt-12 h-fit'>
             <div className='relative md:max-w-xl'>
-              <img
+              {/* <img
                 src='/your-image.png'
                 className='absolute w-40 lg:w-52 left-56 -top-20 select-none hidden sm:block lg:hidden xl:block'
                 />
               <img
                 src='/line.png'
                 className='absolute w-20 -left-6 -bottom-6 select-none'
+                /> */}
+              {/* <Phone className='w-64' imgSrc='/testimonials/1.jpg' /> */}
+              <div className='w-72'>
+                <img
+                  className='object-cover min-w-full min-h-full rounded-[40px]'
+                  src='/phone.gif'
+                  alt='overlaying phone image'
                 />
-              <Phone className='w-64' imgSrc='/testimonials/1.jpg' />
+              </div>
             </div>
           </div>
         </MaxWidthWrapper>
       </section>
-
+      <div className='py-4 px-8'>
+      <BasicGrid />
+      </div>
       {/* value proposition section */}
-        <CarouselPlugin/>
+        {/* <CarouselPlugin/> */}
         <ProductCards/>
       <section className='bg-slate-100 grainy-dark py-24'>
         <MaxWidthWrapper className='flex flex-col items-center gap-16 sm:gap-32'>
