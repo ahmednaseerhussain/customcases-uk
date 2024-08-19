@@ -1,3 +1,4 @@
+'use client'
 import { useState } from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
