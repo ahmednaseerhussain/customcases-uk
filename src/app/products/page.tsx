@@ -1,15 +1,13 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/jOoRpswN4Ga
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
-import { buttonVariants } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import { ArrowRight } from "lucide-react"
-import Link from "next/link"
+import { useState } from "react";
+import { buttonVariants } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function Component() {
+  const [quantity, setQuantity] = useState("1");
+
   return (
     <div className="w-full">
       <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center max-w-6xl mx-auto py-12 md:py-24">
@@ -61,7 +59,7 @@ export default function Component() {
                   <Label htmlFor="quantity" className="text-base">
                     Quantity
                   </Label>
-                  <Select id="quantity" defaultValue="1">
+                  <Select value={quantity} onValueChange={setQuantity}>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
@@ -90,5 +88,5 @@ export default function Component() {
         </div>
       </section>
     </div>
-  )
+  );
 }
