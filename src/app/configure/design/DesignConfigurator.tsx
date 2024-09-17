@@ -11,11 +11,11 @@ import html2canvas from 'html2canvas';
 import { useEffect, useRef, useState } from 'react'
 import {
   CASES,
-  COLORS,
   FINISHES,
   MATERIALS,
   MODELS,
 } from '@/validators/option-validator'
+import { useOptionsValidator } from '@/validators/option-validator'
 import { Label } from '@/components/ui/label'
 import {
   DropdownMenu,
@@ -25,16 +25,14 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Check, ChevronsUpDown } from 'lucide-react'
-import { BASE_PRICE } from '@/config/products'
+import { BASE_PRICE, products } from '@/config/products'
 import { useUploadThing } from '@/lib/uploadthing'
 import { useToast } from '@/components/ui/use-toast'
 import { useMutation } from '@tanstack/react-query'
 import { saveConfig as _saveConfig, SaveConfigArgs } from './actions'
-import { useRouter } from 'next/navigation'
-import { CaseDesign } from '@prisma/client'
-import { Card } from '@/components/ui/card'
-// import { useCase } from './ContexCase'
-
+import { useRouter, useSearchParams } from 'next/navigation'
+// import { CaseColor, CaseDesign } from '@prisma/client'
+import { string } from 'zod'
 
 interface CaseOption {
   label: string;
@@ -42,10 +40,13 @@ interface CaseOption {
 }
 
 
+
 interface DesignConfiguratorProps {
   configId: string
   imageUrl: string
-  
+  text1: string
+  text2: string
+
   imageDimensions: { width: number; height: number }
 }
 type PhoneModel = keyof typeof CASES
@@ -53,11 +54,18 @@ const DesignConfigurator = ({
   configId,
   imageUrl,
   imageDimensions,
-  
-}: DesignConfiguratorProps ) => {
+
+}: DesignConfiguratorProps) => {
   const { toast } = useToast()
   const router = useRouter()
-  
+  const { COLORS } = useOptionsValidator()
+  const searchParams = useSearchParams();
+  const productId = searchParams.get('product');
+  const selectedProduct = products.find(product => product.id === Number(productId));
+  if (!selectedProduct) {
+    console.error('Product not found');
+    return null;
+  }
   const { mutate: saveConfig, isPending } = useMutation({
     mutationKey: ['save-config'],
     mutationFn: async (args: SaveConfigArgs) => {
@@ -71,37 +79,72 @@ const DesignConfigurator = ({
       })
     },
     onSuccess: () => {
-      
-      router.push(`/configure/preview?id=${configId}`)
+
+      router.push(`/configure/preview?id=${configId}&product=${productId}`)
     },
   })
+
   
+  const [isFrameAdded, setIsFrameAdded] = useState(selectedProduct?.isFrame || false);
+  const [isTextAdded, setIsTextAdded] = useState(selectedProduct?.isText || false);
+  const [isRndAdded, setIsRndAdded] = useState(selectedProduct?.isRnd || false);
+  const [inputValue, setInputValue] = useState('');
+  const [inputValue2, setInputValue2] = useState('');
+
   const [options, setOptions] = useState<{
-    caseImg: (typeof CASES[PhoneModel])[number]
-    color: (typeof COLORS)[number]
-    model: (typeof MODELS.options)[number]
-    material: (typeof MATERIALS.options)[number]
-    finish: (typeof FINISHES.options)[number]
-    case: CaseOption
+    caseImg: (typeof CASES[PhoneModel])[number];
+    color: (typeof COLORS)[number];
+    model: (typeof MODELS.options)[number];
+    material: (typeof MATERIALS.options)[number];
+    finish: (typeof FINISHES.options)[number];
+    case: CaseOption;
+    
+    
   }>({
-    color: COLORS[0],
-    caseImg: CASES[MODELS.options[0].value as PhoneModel][0],
+    color: COLORS[0], // Default color
+    caseImg: CASES[MODELS.options[0].value as PhoneModel][1],
     case: CASES[MODELS.options[0].value as PhoneModel][0],
-    model: MODELS.options[0],
+    model: MODELS.options[1],
     material: MATERIALS.options[0],
     finish: FINISHES.options[0],
-  })
+       
+    
+
+  });
+
+  useEffect(() => {
+    if (productId !== null) {
+      const index = parseInt(productId, 10);
+      const validColor = COLORS[0]; // Default to first color if index is invalid
+      const model = MODELS.options[1]; // Default model
+      const material = MATERIALS.options[0]; // Default material
+      const finish = FINISHES.options[0]; // Default finish
+      const caseImg = CASES[model.value as PhoneModel][0];
+
+      setOptions({
+        color: validColor,
+        caseImg,
+        case: caseImg,
+        model,
+        material,
+        finish,
+        
+      });
+    }
+  }, [productId]);
+  console.log(productId)
+
 
   const [cases, setCases] = useState(CASES[MODELS.options[0].value as PhoneModel])
 
   const [renderedDimension, setRenderedDimension] = useState({
-    width: imageDimensions.width / 4,
-    height: imageDimensions.height / 4,
+    width: imageDimensions.width / 8,
+    height: imageDimensions.height / 8,
   })
 
   const [renderedPosition, setRenderedPosition] = useState({
-    x: 150,
-    y: 205,
+    x: 120,
+    y: 208,
   })
 
   const phoneCaseRef = useRef<HTMLDivElement>(null)
@@ -118,7 +161,7 @@ const DesignConfigurator = ({
         height,
       } = phoneCaseRef.current!.getBoundingClientRect()
 
-      
+
 
       const { left: containerLeft, top: containerTop } =
         containerRef.current!.getBoundingClientRect()
@@ -163,9 +206,9 @@ const DesignConfigurator = ({
       })
     }
   }
- 
 
-  
+
+
 
   function base64ToBlob(base64: string, mimeType: string) {
     const byteCharacters = atob(base64)
@@ -184,17 +227,8 @@ const DesignConfigurator = ({
     }))
     setCases(CASES[model.value as PhoneModel]) // Update cases based on selected model
   }
-  // const handleCaseChange = (model) => {
-  //   const selectedCase = CASES[options.model.value as PhoneModel].find(
-  //     (phoneCase) => phoneCase.value === model.target.value
-  //   );
-  //   if (selectedCase) {
-  //     setOptions((prev) => ({ ...prev, case: selectedCase }));
-  //   }
-  // };
+ 
   
-  
-  const [isFrameAdded, setIsFrameAdded] = useState(false);
 
   const handleFrameSelection = (selection: boolean) => {
     setIsFrameAdded(selection);
@@ -208,99 +242,174 @@ const DesignConfigurator = ({
       const dataURL = canvas.toDataURL('image/png');
       localStorage.setItem('divImage', dataURL);
     }
-  };
+  }; 
+  // const updatedColors = COLORS.map(color => ({
+  //   ...color,
+  //   image: selectedProduct[`colorOptions${color.image}`] || color.image,
+  // }));
   return (
     <div className='relative mt-20 grid grid-cols-1 lg:grid-cols-3 mb-20 pb-20'>
       <div
-        
+
         ref={containerRef}
         className='relative h-[37.5rem] overflow-hidden col-span-2 w-full max-w-4xl flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'>
         <div ref={savedImg} className='relative w-60 bg-opacity-50 pointer-events-none aspect-[896/1831]'>
           <AspectRatio
             ref={phoneCaseRef}
             ratio={896 / 1831}
-            className='pointer-events-none relative z-50 aspect-[896/1831] w-full'>
-                
+            className='pointer-events-none relative z-[49] aspect-[896/1831] w-full'>
+
             <NextImage
               fill
               alt='phone image'
               src={options.caseImg.image}
-              className='pointer-events-none z-50 select-none'
+              className='pointer-events-none z-[49] select-none'
             />
-            
+            <div className={`w-full h-full overflow-hidden relative`}>
+              <NextImage
+                src={imageUrl}
+                width={selectedProduct.setImageWidth}  // Adjust based on frame presence
+                height={selectedProduct.setImageHeight} // Adjust based on frame presence
+                alt='your image'
+                
+                className={` pointer-events-none absolute  object-cover inset-10  opacity-93 ${selectedProduct.rounded} ${selectedProduct.top} ${selectedProduct.left}`}
+              />
+              <NextImage
+              src={selectedProduct.assetimage}
+              height={selectedProduct.assetimageHeight}
+              width={selectedProduct.assetimageWidth}
+              
+              alt=''
+              className ={`pointer-events-none object-cover absolute inset-0 ${selectedProduct.assetimagePosition} z-[50]`}
+            />
+            </div>
           </AspectRatio>
           <div className='absolute z-40 inset-0 left-[3px] top-px right-[3px] bottom-px rounded-[32px] shadow-[0_0_0_99999px_rgba(229,231,235,0.6)]' />
           <div
             className={cn(
               'absolute inset-0 left-[3px] top-px right-[3px] bottom-px rounded-[32px]',
-              // `bg-${options.color.tw}`
             )}
-            
           >
+
             <NextImage
               src={options.color.image}
               fill
               alt='your image'
               className='pointer-events-none rounded-[35px]'
             />
-          </div>
-        </div>
 
-        <Rnd
+            {isTextAdded && (
+              <div>
+                <input
+                  type="text"
+                  placeholder={selectedProduct.placeholderText1}
+                  value={inputValue}
+                  className={` 
+                    ${selectedProduct.fontname} 
+                    absolute 
+                    break-words 
+                    mx-auto w-[120px] 
+                    inset-x-0 z-50 
+                    ${selectedProduct.text1Position} 
+                    font-bold 
+                    mx-auto  
+                    tracking-tighter 
+                    border-none
+                    bg-transparent 
+                    whitespace-normal 
+                    ${selectedProduct.text1Color} 
+                    outline-none
+                    `}
+                  style={{ fontSize: selectedProduct.font1Size, zIndex: 50 }}
+
+
+                />
+                <input
+                  type="text"
+                  placeholder={selectedProduct.placeholderText2}
+                  value={inputValue2}
+                  className={`${selectedProduct.fontname2} absolute inset-x-0 z-50 ${selectedProduct.text2Position} ${selectedProduct.text2PositionLeft} mx-auto w-2/3 tracking-tighter border-none text-center bg-transparent ${selectedProduct.text2Color} outline-none`}
+                  style={{ fontSize: selectedProduct.font2Size, zIndex: 50 }}
+
+
+                />
+              </div>
+            )}
+            
+
+          </div>
+
+        </div>
+        {isRndAdded && (
+          <Rnd
         
           default={{
-            x: 150,
-            y: 205,
-            height: imageDimensions.height / 4,
-            width: imageDimensions.width / 4,
+            x: 0,
+            y: 0,
+            height: imageDimensions.height/6,
+            width: imageDimensions.width/6,
           }}
           onResizeStop={(_, __, ref, ___, { x, y }) => {
             setRenderedDimension({
               height: parseInt(ref.style.height.slice(0, -2)),
               width: parseInt(ref.style.width.slice(0, -2)),
-            })
+            });
 
-            setRenderedPosition({ x, y })
+            setRenderedPosition({ x, y });
           }}
           onDragStop={(_, data) => {
-            const { x, y } = data
-            setRenderedPosition({ x, y })
+            const { x, y } = data;
+            setRenderedPosition({ x, y });
           }}
-          className='absolute z-20 border-[3px] '
+          className='absolute z-20 border-[1px] aspect-[896/1831]'
           lockAspectRatio
           resizeHandleComponent={{
             bottomRight: <HandleComponent />,
             bottomLeft: <HandleComponent />,
             topRight: <HandleComponent />,
             topLeft: <HandleComponent />,
-          }}>
+          }}
+        >
+          <div ref={savedImg} className={`relative w-full h-full overflow-hidden ${selectedProduct.rounded} aspect-[896/1831] `}>
             
-          <div className='relative w-full h-full'>
-            
-            <NextImage
-              src={imageUrl}
-              fill
-              alt='your image'
-              className='pointer-events-none absolute inset-10'
-            />
-            {isFrameAdded && (
-          <NextImage
-            src="/pngegg.png"
-            layout="fill"
-            objectFit="cover"
-            alt="your"
-            className="pointer-events-none absolute inset-0"
-          />
-        )}
-            
-            {/* <div className="absolute inset-0 flex bottom-[-200px] items-center justify-center text-black  font-bold font-rye">
-            Your Text Here
-          </div> */}
+              <NextImage
+                src={imageUrl}
+                width={imageDimensions.width}  // Adjust based on frame presence
+                height={imageDimensions.height} // Adjust based on frame presence
+                alt='your image'
+                className={` pointer-events-none absolute inset-0 object-cover `}
+              />
+              {isFrameAdded && (
+                <div
+                  className="pointer-events-none h-full absolute inset-0 border-solid border-t-[6px] border-l-[6px] border-r-[6px] border-b-[45px] border-[#fcf7e8] shadow-[10px_10px_30px_rgba(0,0,0,0.5)] z-50 overflow-visible"
+                  style={{ boxShadow: '20px 20px 50px rgba(0, 0, 0, 1)', zIndex: 1000 }}
+                >
+                  <input
+                    type="text"
+                    placeholder="Enter text here"
+                    value={inputValue}
+                    className={`${selectedProduct.fontname} absolute inset-x-0 -bottom-8 mx-auto w-2/3 border-none text-center bg-transparent text-black outline-none`}
+                    style={{ fontSize: '28px', zIndex: 50, }}
+
+
+                  />
+                  <input
+                    type="text"
+                    placeholder="Enter text here"
+                    value={inputValue2}
+                    className={`${selectedProduct.fontname2} absolute inset-x-0 -bottom-10 left-10 mx-auto w-2/3 border-none text-right bg-transparent text-black outline-none`}
+                    style={{ fontSize: '10px', zIndex: 50, }}
+                  />
+                </div>
+
+              )}
             
           </div>
         </Rnd>
+        )}
         
-        
+
+
       </div>
 
       <div className='h-[37.5rem] w-full col-span-full lg:col-span-1 flex flex-col bg-white'>
@@ -327,7 +436,7 @@ const DesignConfigurator = ({
                       color: val,
                     }))
                   }}>
-                  <Label>Color: {options.color.label}</Label>
+                  <Label>Design: {options.color.label}</Label>
                   <div className='mt-3 flex items-center space-x-3'>
                     {COLORS.map((color) => (
                       <RadioGroup.Option
@@ -342,16 +451,20 @@ const DesignConfigurator = ({
                           )
                         }>
                         <span
-                          className={cn(
-                            `bg-${color.tw}`,
-                            'h-8 w-8 rounded-full border border-black border-opacity-10'
-                          )}
+                          style={{
+                            backgroundImage: `url(${color.image})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                          }}
+                          className='h-8 w-8 rounded-full border border-black border-opacity-10'
                         />
                       </RadioGroup.Option>
                     ))}
                   </div>
                 </RadioGroup>
                 <div className="relative flex flex-col gap-3 w-full">
+                {isFrameAdded && (
+                  <div>
                   <Label>Add Frame</Label>
                   <RadioGroup value={isFrameAdded} onChange={handleFrameSelection}>
                     <div className="mt-3 flex items-center space-x-3">
@@ -363,9 +476,65 @@ const DesignConfigurator = ({
                       </RadioGroup.Option>
                     </div>
                   </RadioGroup>
+                  </div>
+                )}
+                  
+                  {isFrameAdded && (
+                    <div className="mt-2">
+                      <input
+                        type="text"
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        placeholder="Enter text here"
+                        className="w-40 border border-gray-400 text-center  bg-white text-black outline-none p-2 rounded-md"
+                        style={{ fontSize: '14px' }}
+                        minLength={6}
+                        maxLength={12}
+                      />
+                      <input
+                        type="text"
+                        value={inputValue2}
+                        onChange={(a) => setInputValue2(a.target.value)}
+                        placeholder="Enter Date here"
+                        className="w-40 border border-gray-400 text-center bg-white text-black outline-none p-2 mt-2 rounded-md"
+                        style={{ fontSize: '14px' }}
+
+                      />
+
+
+                    </div>
+
+                  )} 
+                  {isTextAdded && (
+                    <div className='mt-2'>
+                      <input
+                        type="text"
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        placeholder="Enter text here"
+                        className="w-40 border border-gray-400 text-center  bg-white text-black outline-none p-2 rounded-md"
+                        style={{ fontSize: '14px' }}
+                        minLength={6}
+                        maxLength={20}
+                        // onSubmit={inputValue}
+                      />
+                      <input
+                        type="text"
+                        value={inputValue2}
+                        onChange={(a) => setInputValue2(a.target.value)}
+                        placeholder="Enter text here"
+                        className="w-40 border border-gray-400 text-center  bg-white text-black outline-none p-2 mt-2 rounded-md"
+                        style={{ fontSize: '14px' }}
+                        minLength={6}
+                        maxLength={12}
+                        // onSubmit={inputValue2}
+                      />
+                    </div>
+                  )}
+
                 </div>
-                
-                      
+
+
                 <div className='relative flex flex-col gap-3 w-full'>
                   <Label>Model</Label>
                   <DropdownMenu>
@@ -386,7 +555,7 @@ const DesignConfigurator = ({
                             'flex text-sm gap-1 items-center p-1.5 cursor-default hover:bg-zinc-100',
                             {
                               'bg-zinc-100':
-                              model.label === options.model.label,
+                                model.label === options.model.label,
                             }
                           )}
                           onClick={() => handleModelChange(model)}>
@@ -508,9 +677,9 @@ const DesignConfigurator = ({
               </div>
             </div>
           </div>
-          
+
         </ScrollArea>
-        
+
 
         <div className='w-full px-8 h-16 bg-white'>
           <div className='h-px w-full bg-zinc-200' />
@@ -519,10 +688,10 @@ const DesignConfigurator = ({
               <p className='font-medium whitespace-nowrap'>
                 {formatPrice(
                   (BASE_PRICE + options.finish.price + options.material.price) /
-                    100
+                  100
                 )}
               </p>
-              
+
               <Button
                 isLoading={isPending}
                 disabled={isPending}
@@ -530,11 +699,13 @@ const DesignConfigurator = ({
                 onClick={() =>
                   saveConfig({
                     configId,
-                    color: options.color.value,
-                    caseImg: options.caseImg.value as CaseDesign,
+                    color: options.color.image ,
+                    caseImg: options.caseImg.image ,
                     finish: options.finish.value,
                     material: options.material.value,
                     model: options.model.value,
+                    text1: inputValue, 
+                    text2: inputValue2,
                   })
                 }
                 size='sm'

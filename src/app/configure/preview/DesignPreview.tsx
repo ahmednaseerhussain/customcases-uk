@@ -2,7 +2,7 @@
 
 import Phone from '@/components/Phone'
 import { Button } from '@/components/ui/button'
-import { BASE_PRICE, PRODUCT_PRICES } from '@/config/products'
+import { BASE_PRICE, PRODUCT_PRICES, products } from '@/config/products'
 import { cn, formatPrice } from '@/lib/utils'
 import { MODELS } from '@/validators/option-validator'
 import { Configuration } from '@prisma/client'
@@ -11,7 +11,7 @@ import { ArrowRight, Check } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import Confetti from 'react-dom-confetti'
 import { createCheckoutSession } from './actions'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useToast } from '@/components/ui/use-toast'
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'
 import LoginModal from '@/components/LoginModal'
@@ -23,6 +23,16 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const { id } = configuration
   const { user } = useKindeBrowserClient()
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false)
+  const searchParams = useSearchParams();
+  const productId = searchParams.get('product');
+
+  // Find the selected product from the products array
+  const selectedProduct = products.find(product => product.id === Number(productId));
+
+  if (!selectedProduct) {
+    console.error('Product not found');
+    return 
+  }
 
   const [showConfetti, setShowConfetti] = useState<boolean>(false)
   useEffect(() => setShowConfetti(true), [])
@@ -80,7 +90,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
       <div className='mt-20 flex flex-col items-center md:grid text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12'>
         <div className='md:col-span-4 lg:col-span-3 md:row-span-2 md:row-end-2'>
-          <div className={cn('relative pointer-events-none z-50 overflow-hidden')}>
+          <div className={cn('relative pointer-events-none z-50 overflow-hidden aspect-[896/1831]')}>
             <div
               className={cn(
                 'absolute inset-0 left-[3px] top-px right-[3px] bottom-px rounded-[32px]'
@@ -88,7 +98,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
             >
               <div className='absolute inset-0 -z-10'>
                 <NextImage
-                  src={`/${color}.jpg`}
+                  src={`${configuration.color}` || ''}
                   fill
                   alt='your image'
                   className='pointer-events-none rounded-[35px]'
@@ -96,16 +106,30 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
               </div>
             </div>
             <img
-              src={`/${caseImg}.png`}
+              src={configuration.caseImg || ''}
               className='pointer-events-none z-10 select-none inset-10'
               alt='phone image'
             />
             <div className='absolute -z-10 inset-0'>
-              <img
-                className='object-cover min-w-full min-h-full rounded-[40px]'
-                src={configuration.croppedImageUrl!}
-                alt='overlaying phone image'
+            
+              <NextImage
+                src={configuration.imageUrl}
+                width={selectedProduct.setImageWidth}  // Adjust based on frame presence
+                height={selectedProduct.setImageHeight} // Adjust based on frame presence
+                alt='your image'
+                
+                className={` pointer-events-none absolute  object-cover inset-10  opacity-93 ${selectedProduct.rounded} ${selectedProduct.top} ${selectedProduct.left}`}
               />
+              <NextImage
+              src={selectedProduct.assetimage}
+              height={selectedProduct.assetimageHeight}
+              width={selectedProduct.assetimageWidth}
+              
+              alt=''
+              className ={`pointer-events-none object-cover absolute inset-0 ${selectedProduct.assetimagePosition} z-[50]`}
+            />
+            
+            
             </div>
           </div>
         </div>

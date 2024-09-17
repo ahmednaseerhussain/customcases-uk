@@ -29,6 +29,9 @@ enum CaseMaterial {
   polycarbonate
 }
 
+
+
+
 enum CaseFinish {
   smooth
   textured
@@ -57,13 +60,15 @@ model Configuration {
   width           Int
   height          Int
   imageUrl        String
-  color           CaseColor?
-  caseImg         CaseDesign?
+  color           String?
+  caseImg         String?
   model           PhoneModel?
   material        CaseMaterial?
   finish          CaseFinish?
   croppedImageUrl String?
   Order           Order[]
+  text1           String?
+  text2           String?
 }
 
 model User {
