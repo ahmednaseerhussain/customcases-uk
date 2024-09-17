@@ -56,16 +56,7 @@ const DesignConfigurator = ({
   imageDimensions,
 
 }: DesignConfiguratorProps) => {
-  const { toast } = useToast()
-  const router = useRouter()
-  const { COLORS } = useOptionsValidator()
-  const searchParams = useSearchParams();
-  const productId = searchParams.get('product');
-  const selectedProduct = products.find(product => product.id === Number(productId));
-  if (!selectedProduct) {
-    console.error('Product not found');
-    return null;
-  }
+
   const { mutate: saveConfig, isPending } = useMutation({
     mutationKey: ['save-config'],
     mutationFn: async (args: SaveConfigArgs) => {
@@ -83,6 +74,17 @@ const DesignConfigurator = ({
       router.push(`/configure/preview?id=${configId}&product=${productId}`)
     },
   })
+  const { toast } = useToast()
+  const router = useRouter()
+  const { COLORS } = useOptionsValidator()
+  const searchParams = useSearchParams();
+  const productId = searchParams.get('product');
+  const selectedProduct = products.find(product => product.id === Number(productId));
+  if (!selectedProduct) {
+    console.error('Product not found');
+    return null;
+  }
+  
 
   
   const [isFrameAdded, setIsFrameAdded] = useState(selectedProduct?.isFrame || false);
