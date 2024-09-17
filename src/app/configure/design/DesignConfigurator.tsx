@@ -32,7 +32,7 @@ import { useMutation } from '@tanstack/react-query'
 import { saveConfig as _saveConfig, SaveConfigArgs } from './actions'
 import { useRouter, useSearchParams } from 'next/navigation'
 // import { CaseColor, CaseDesign } from '@prisma/client'
-import { string } from 'zod'
+import { boolean, string } from 'zod'
 
 interface CaseOption {
   label: string;
@@ -79,17 +79,37 @@ const DesignConfigurator = ({
   const { COLORS } = useOptionsValidator()
   const searchParams = useSearchParams();
   const productId = searchParams.get('product');
-  const selectedProduct = products.find(product => product.id === Number(productId));
-  if (!selectedProduct) {
-    console.error('Product not found');
-    return null;
-  }
+  const selectedProduct = products.find(product => product.id === Number(productId)) || {
+    isFrame: false,
+    isText: false,
+    isRnd: false,
+    setImageWidth: 0,
+    setImageHeight: 0,
+    rounded: '',
+    top: '',
+    left: '',
+    assetimage: '',
+    assetimageHeight: 0,
+    assetimageWidth: 0,
+    assetimagePosition: '',
+    placeholderText1: '',
+    fontname: '',
+    font1Size: 0,
+    text1Position: '',
+    text1Color: '',
+    placeholderText2: '',
+    fontname2: '',
+    font2Size: 0,
+    text2Position: '',
+    text2PositionLeft: '',
+    text2Color: '',
+  };
   
 
   
-  const [isFrameAdded, setIsFrameAdded] = useState(selectedProduct?.isFrame || false);
-  const [isTextAdded, setIsTextAdded] = useState(selectedProduct?.isText || false);
-  const [isRndAdded, setIsRndAdded] = useState(selectedProduct?.isRnd || false);
+  const [isFrameAdded, setIsFrameAdded] = useState(selectedProduct.isFrame);
+  const [isTextAdded, setIsTextAdded] = useState(selectedProduct.isText);
+  const [isRndAdded, setIsRndAdded] = useState(selectedProduct.isRnd);
   const [inputValue, setInputValue] = useState('');
   const [inputValue2, setInputValue2] = useState('');
 
@@ -132,8 +152,11 @@ const DesignConfigurator = ({
         finish,
         
       });
+      setIsFrameAdded(selectedProduct.isFrame);
+      setIsTextAdded(selectedProduct.isText);
+      setIsRndAdded(selectedProduct.isRnd);
     }
-  }, [productId]);
+  }, [productId] );
   console.log(productId)
 
 
