@@ -40,6 +40,8 @@ const Page = () => {
     text2Position: '',
     text2PositionLeft: '',
     text2Color: '',
+    frameX: 0,
+    frameY: 0,
   };
   const [isDragOver, setIsDragOver] = useState<boolean>(false)
   const [uploadProgress, setUploadProgress] = useState<number>(0)
