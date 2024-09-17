@@ -107,7 +107,7 @@ const DesignConfigurator = ({
   
 
   
-  const [isFrameAdded, setIsFrameAdded] = useState(selectedProduct.isFrame);
+  const [isFrameAdded, setIsFrameAdded] = useState<boolean>(false);
   const [isTextAdded, setIsTextAdded] = useState(selectedProduct.isText);
   const [isRndAdded, setIsRndAdded] = useState(selectedProduct.isRnd);
   const [inputValue, setInputValue] = useState('');
