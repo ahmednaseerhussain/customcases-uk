@@ -25,14 +25,31 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false)
   const searchParams = useSearchParams();
   const productId = searchParams.get('product');
-
-  // Find the selected product from the products array
-  const selectedProduct = products.find(product => product.id === Number(productId));
-
-  if (!selectedProduct) {
-    console.error('Product not found');
-    return 
-  }
+  const selectedProduct = products.find(product => product.id === Number(productId)) || {
+    isFrame: false,
+    isText: false,
+    isRnd: false,
+    setImageWidth: 0,
+    setImageHeight: 0,
+    rounded: '',
+    top: '',
+    left: '',
+    assetimage: '',
+    assetimageHeight: 0,
+    assetimageWidth: 0,
+    assetimagePosition: '',
+    placeholderText1: '',
+    fontname: '',
+    font1Size: 0,
+    text1Position: '',
+    text1Color: '',
+    placeholderText2: '',
+    fontname2: '',
+    font2Size: 0,
+    text2Position: '',
+    text2PositionLeft: '',
+    text2Color: '',
+  };
 
   const [showConfetti, setShowConfetti] = useState<boolean>(false)
   useEffect(() => setShowConfetti(true), [])
