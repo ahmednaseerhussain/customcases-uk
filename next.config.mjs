@@ -3,6 +3,9 @@ const nextConfig = {
   images: {
     domains: ['utfs.io'],
   },
+  experimental: {
+    missingSuspenseWithCSRBailout: false,  // Disable the rule
+  },
   async headers() {
     return [
       {
