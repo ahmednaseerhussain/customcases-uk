@@ -11,17 +11,40 @@ import Dropzone, { FileRejection } from 'react-dropzone'
 import Cropper, { ReactCropperElement } from "react-cropper";
 import 'cropperjs/dist/cropper.css'
 import { BASE_PRICE, products } from '@/config/products'
+import { frame } from 'framer-motion'
 
 const Page = () => {
   const { toast } = useToast()
   const searchParams = useSearchParams()
   const productId = searchParams.get('id')
   // const productIds = searchParams.get('product');
-  const selectedProduct = products.find(product => product.id === Number(productId));
-  if (!selectedProduct) {
-    console.error('Product not found');
-    return null;
-  }
+  const selectedProduct = products.find(product => product.id === Number(productId)) || {
+    isFrame: false,
+    isText: false,
+    isRnd: false,
+    setImageWidth: 0,
+    setImageHeight: 0,
+    rounded: '',
+    top: '',
+    left: '',
+    assetimage: '',
+    assetimageHeight: 0,
+    assetimageWidth: 0,
+    assetimagePosition: '',
+    placeholderText1: '',
+    fontname: '',
+    font1Size: 0,
+    text1Position: '',
+    text1Color: '',
+    placeholderText2: '',
+    fontname2: '',
+    font2Size: 0,
+    text2Position: '',
+    text2PositionLeft: '',
+    text2Color: '',
+    frameX: 0,
+    frameY: 0,
+  };
   const [isDragOver, setIsDragOver] = useState<boolean>(false)
   const [uploadProgress, setUploadProgress] = useState<number>(0)
   const [imageToCrop, setImageToCrop] = useState<string | null>(null)
