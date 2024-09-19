@@ -325,15 +325,14 @@ const DesignConfigurator = ({
 
             {isTextAdded && (
               <div>
-                <input
-                  type="text"
+                <textarea
                   placeholder={selectedProduct.placeholderText1}
                   value={inputValue}
                   className={` 
                     ${selectedProduct.fontname} 
                     absolute 
                     break-words 
-                    mx-auto w-[120px] 
+                    mx-auto  
                     inset-x-0 z-50 
                     ${selectedProduct.text1Position} 
                     font-bold 
@@ -344,17 +343,35 @@ const DesignConfigurator = ({
                     whitespace-normal 
                     ${selectedProduct.text1Color} 
                     outline-none
+                    resize-none
                     `}
-                  style={{ fontSize: selectedProduct.font1Size, zIndex: 50 }}
+                  style={{ fontSize: selectedProduct.font1Size, zIndex: 50, wordBreak: "break-all", overflowWrap: "break-word", }}
+                  rows={4}
+                  
 
 
                 />
-                <input
-                  type="text"
+                <textarea
                   placeholder={selectedProduct.placeholderText2}
                   value={inputValue2}
-                  className={`${selectedProduct.fontname2} absolute inset-x-0 z-50 ${selectedProduct.text2Position} ${selectedProduct.text2PositionLeft} mx-auto w-2/3 tracking-tighter border-none text-center bg-transparent ${selectedProduct.text2Color} outline-none`}
-                  style={{ fontSize: selectedProduct.font2Size, zIndex: 50 }}
+                  className={`
+                    ${selectedProduct.fontname2} 
+                    absolute 
+                    break-words
+                    inset-x-0 z-50 
+                    ${selectedProduct.text2Position} 
+                    ${selectedProduct.text2PositionLeft} 
+                    mx-auto w-2/3 tracking-tighter 
+                    border-none text-center 
+                    bg-transparent 
+                    whitespace-normal
+
+                    ${selectedProduct.text2Color} 
+                    outline-none
+                    resize-none
+                    `}
+                  style={{ fontSize: selectedProduct.font2Size, zIndex: 50, wordBreak: "break-all", overflowWrap: "break-word", }}
+                  rows={2}
 
 
                 />
