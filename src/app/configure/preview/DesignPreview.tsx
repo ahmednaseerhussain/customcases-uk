@@ -130,7 +130,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
             <div className='absolute -z-10 inset-0'>
             
               <NextImage
-                src={configuration.imageUrl}
+                src={configuration.imageUrl || ""}
                 width={selectedProduct.setImageWidth}  // Adjust based on frame presence
                 height={selectedProduct.setImageHeight} // Adjust based on frame presence
                 alt='your image'
