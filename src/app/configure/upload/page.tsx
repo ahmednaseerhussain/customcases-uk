@@ -6,20 +6,19 @@ import { useUploadThing } from '@/lib/uploadthing'
 import { cn } from '@/lib/utils'
 import { Image, Loader2, MousePointerSquareDashed } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useState, useTransition, useRef } from 'react'
+import { useState, useTransition, useRef, useEffect } from 'react'
 import Dropzone, { FileRejection } from 'react-dropzone'
 import Cropper, { ReactCropperElement } from "react-cropper";
 import 'cropperjs/dist/cropper.css'
 import { BASE_PRICE, products } from '@/config/products'
 import { frame } from 'framer-motion'
 
-
 const Page = () => {
   const { toast } = useToast()
   const searchParams = useSearchParams()
   const productId = searchParams.get('id')
-  // const productIds = searchParams.get('product');
   const selectedProduct = products.find(product => product.id === Number(productId)) || {
+    requiresImage: true,
     isFrame: false,
     isText: false,
     isRnd: false,
@@ -51,7 +50,7 @@ const Page = () => {
   const [imageToCrop, setImageToCrop] = useState<string | null>(null)
   const [croppedImage, setCroppedImage] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState<boolean>(false)
-  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false) // State to manage button state
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false)
   const cropperRef = useRef<ReactCropperElement>(null)
   const router = useRouter()
 
@@ -81,7 +80,7 @@ const Page = () => {
   const onDropAccepted = (acceptedFiles: File[]) => {
     const reader = new FileReader()
     reader.onload = () => {
-      setImageToCrop(reader.result as string) // Show the image in the cropper
+      setImageToCrop(reader.result as string)
     }
     reader.readAsDataURL(acceptedFiles[0])
     setIsDragOver(false)
@@ -89,32 +88,31 @@ const Page = () => {
 
   const [isPending, startTransition] = useTransition()
 
-  // Function to crop and upload the image
   const cropAndUploadImage = () => {
     if (cropperRef.current) {
       const croppedDataUrl = cropperRef.current.cropper.getCroppedCanvas().toDataURL()
-      setCroppedImage(croppedDataUrl) // Set the cropped image to be uploaded
+      setCroppedImage(croppedDataUrl)
 
       if (croppedDataUrl) {
         const blob = dataURLtoBlob(croppedDataUrl)
         const file = new File([blob], "cropped-image.png", { type: "image/png" })
 
         if (!isUploading) {
-          setIsUploading(true) // Set uploading state to true
-          setIsButtonDisabled(true) // Disable the button
+          setIsUploading(true)
+          setIsButtonDisabled(true)
           startUpload([file], { configId: undefined }).then(() => {
             setImageToCrop(null)
             setCroppedImage(null)
-            setIsUploading(false) // Reset uploading state
-            setIsButtonDisabled(false) // Enable the button
+            setIsUploading(false)
+            setIsButtonDisabled(false)
 
             toast({
               title: "Upload complete",
               description: "Your cropped image has been uploaded!",
             })
           }).catch((error) => {
-            setIsUploading(false) // Reset uploading state on error
-            setIsButtonDisabled(false) // Enable the button
+            setIsUploading(false)
+            setIsButtonDisabled(false)
             toast({
               title: "Upload failed",
               description: `Something went wrong: ${error.message}`,
@@ -126,7 +124,6 @@ const Page = () => {
     }
   }
 
-  // Convert Data URL to Blob for upload
   const dataURLtoBlob = (dataURL: string) => {
     const byteString = atob(dataURL.split(',')[1])
     const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0]
@@ -138,7 +135,35 @@ const Page = () => {
     return new Blob([ab], { type: mimeString })
   }
 
+  // If the product does not require an image, redirect automatically
+  useEffect(() => {
+    if (!selectedProduct.requiresImage) {
+      const createConfigWithoutImage = async () => {
+        try {
+          // Make an API call to create a configuration without an image
+          const response = await fetch('/api/create-config', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ productId }),
+          });
   
+          const data = await response.json();
+          const configId = data.configId || Date.now().toString();
+  
+          // Redirect to design page with the generated configId
+          startTransition(() => {
+            router.push(`/configure/design?id=${configId}&product=${productId}`);
+          });
+        } catch (error) {
+          console.error('Failed to create configuration:', error);
+        }
+      };
+  
+      createConfigWithoutImage();
+    }
+  }, [selectedProduct.requiresImage, productId, router, startTransition]);
 
   return (
     <div
@@ -165,7 +190,7 @@ const Page = () => {
             <button 
               className='bg-red-900 text-white px-4 py-2 rounded mt-4' 
               onClick={cropAndUploadImage}
-              disabled={isButtonDisabled} // Disable button based on state
+              disabled={isButtonDisabled}
             >
               {isUploading ? (
                 <div className='flex items-center'>
@@ -239,4 +264,4 @@ const Page = () => {
 }
 
 export default Page
-export const dynamic = 'force-dynamic'; // In page component
+export const dynamic = 'force-dynamic';

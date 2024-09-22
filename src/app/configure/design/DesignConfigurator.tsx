@@ -83,6 +83,7 @@ const DesignConfigurator = ({
     isFrame: false,
     isText: false,
     isRnd: false,
+    needsFill: true,
     setImageWidth: 0,
     setImageHeight: 0,
     rounded: '',
@@ -293,9 +294,10 @@ const DesignConfigurator = ({
             <div className={`w-full h-full overflow-hidden relative`}>
               <NextImage
                 src={imageUrl}
-                width={selectedProduct.setImageWidth}  // Adjust based on frame presence
-                height={selectedProduct.setImageHeight} // Adjust based on frame presence
+                {...(selectedProduct.needsFill ? { fill: true } : { width: selectedProduct.setImageWidth, height: selectedProduct.setImageHeight })}
                 alt='your image'
+                style={{ objectFit: 'cover' }}
+                
                 
                 className={` pointer-events-none absolute  object-cover inset-10  opacity-93 ${selectedProduct.rounded} ${selectedProduct.top} ${selectedProduct.left}`}
               />

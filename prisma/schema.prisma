@@ -59,7 +59,7 @@ model Configuration {
   id              String        @id @default(cuid())
   width           Int
   height          Int
-  imageUrl        String
+  imageUrl        String?
   color           String?
   caseImg         String?
   model           PhoneModel?

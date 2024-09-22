@@ -12,9 +12,9 @@ import Link from 'next/link'
 
 export default function Home() {
   return (
-    <div className='bg-slate-50 grainy-light'>
+    <div className='glassmorphism'>
       <section>
-        <MaxWidthWrapper className='pb-24 pt-10 lg:grid lg:grid-cols-3 sm:pb-32 lg:gap-x-0 xl:gap-x-8 lg:pt-1 xl:pt-16 lg:pb-24'>
+        <MaxWidthWrapper className='pb-0 pt-2 lg:grid lg:grid-cols-3 sm:pb-0 lg:gap-x-0 xl:gap-x-8 lg:pt-1 xl:pt-16 lg:pb-5'>
           <div className='col-span-2 px-6 lg:px-0 lg:pt-0'>
             <div className='relative mx-auto text-center lg:text-left flex flex-col items-center lg:items-start'>
               <div className='absolute w-52 left-0 -top-10 hidden lg:block'>
@@ -100,8 +100,8 @@ export default function Home() {
           
           </div>
 
-          <div className='col-span-full lg:col-span-1 w-full flex justify-center px-8 sm:px-16 md:px-0 mt-3 lg:mx-0 lg:-mt-12 h-fit'>
-            <div className='relative md:max-w-xl'>
+          <div className='col-span-full lg:col-span-1 w-full flex justify-center px-8 sm:px-16 md:px-0 mt-3 lg:mx-0 lg:-mt-12 h-fit pb-0'>
+            <div className='relative md:max-w-xl pb-0'>
               {/* <img
                 src='/your-image.png'
                 className='absolute w-40 lg:w-52 left-56 -top-20 select-none hidden sm:block lg:hidden xl:block'
@@ -122,12 +122,12 @@ export default function Home() {
           </div>
         </MaxWidthWrapper>
       </section>
-      <div className='py-4 px-8'>
+      <div className='pb-10 pt-0 px-8'>
+        <ProductCards/>
       <BasicGrid />
       </div>
       {/* value proposition section */}
         {/* <CarouselPlugin/> */}
-        <ProductCards/>
       <section className='bg-slate-100 grainy-dark py-24'>
         <MaxWidthWrapper className='flex flex-col items-center gap-16 sm:gap-32'>
           <div className='flex flex-col lg:flex-row items-center gap-4 sm:gap-6'>
