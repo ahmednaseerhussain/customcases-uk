@@ -24,6 +24,8 @@ const config = {
         qwitcher: ['Qwitcher Grypen', 'cursive'],
         rye: ['Rye', 'serif'],
         chunky: ['"JI-Chunky-Caps"', 'sans-serif'],
+        season: ['"The-Season"', 'sans-serif'],
+        seasonIT: ['"The-Season2"', 'sans-serif'],
       },
       fontWeight: {
         '100': '100',

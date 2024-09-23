@@ -80,6 +80,9 @@ const DesignConfigurator = ({
   const searchParams = useSearchParams();
   const productId = searchParams.get('product');
   const selectedProduct = products.find(product => product.id === Number(productId)) || {
+    isImage: true,
+    isAsset: true,
+    isModel: true,
     isFrame: false,
     isText: false,
     isRnd: false,
@@ -110,6 +113,9 @@ const DesignConfigurator = ({
   
   const [isFrameAdded, setIsFrameAdded] = useState<boolean>(false);
   const [isTextAdded, setIsTextAdded] = useState(selectedProduct.isText);
+  const [isModelTrue, setIsModelTrue] = useState(selectedProduct.isModel);
+  const [isAssetTrue, setIsAssetTrue] = useState(selectedProduct.isAsset);
+  const [isImageTrue, setIsImageTrue] = useState(selectedProduct.isImage);
   const [isRndAdded, setIsRndAdded] = useState(selectedProduct.isRnd);
   const [inputValue, setInputValue] = useState('');
   const [inputValue2, setInputValue2] = useState('');
@@ -284,15 +290,18 @@ const DesignConfigurator = ({
             ref={phoneCaseRef}
             ratio={896 / 1831}
             className='pointer-events-none relative z-[49] aspect-[896/1831] w-full'>
-
-            <NextImage
+            {isModelTrue && (
+              <NextImage
               fill
               alt='phone image'
               src={options.caseImg.image}
               className='pointer-events-none z-[49] select-none'
             />
+            )}  
+            
             <div className={`w-full h-full overflow-hidden relative`}>
-              <NextImage
+              {isImageTrue && (
+                <NextImage
                 src={imageUrl}
                 {...(selectedProduct.needsFill ? { fill: true } : { width: selectedProduct.setImageWidth, height: selectedProduct.setImageHeight })}
                 alt='your image'
@@ -301,14 +310,19 @@ const DesignConfigurator = ({
                 
                 className={` pointer-events-none absolute  object-cover inset-10  opacity-93 ${selectedProduct.rounded} ${selectedProduct.top} ${selectedProduct.left}`}
               />
-              <NextImage
-              src={selectedProduct.assetimage}
-              height={selectedProduct.assetimageHeight}
-              width={selectedProduct.assetimageWidth}
+              )}
               
-              alt=''
-              className ={`pointer-events-none object-cover absolute inset-0 ${selectedProduct.assetimagePosition} z-[50]`}
-            />
+              {isAssetTrue && (
+                <NextImage
+                src={selectedProduct.assetimage}
+                height={selectedProduct.assetimageHeight}
+                width={selectedProduct.assetimageWidth}
+                
+                alt=''
+                className ={`pointer-events-none object-cover absolute inset-0 ${selectedProduct.assetimagePosition} z-[50]`}
+              />
+              )}
+              
             </div>
           </AspectRatio>
           <div className='absolute z-40 inset-0 left-[3px] top-px right-[3px] bottom-px rounded-[32px] shadow-[0_0_0_99999px_rgba(229,231,235,0.6)]' />
@@ -335,9 +349,9 @@ const DesignConfigurator = ({
                     absolute 
                     break-words 
                     mx-auto  
+                    italic
                     inset-x-0 z-50 
-                    ${selectedProduct.text1Position} 
-                    font-bold 
+                    ${selectedProduct.text1Position}                     
                     mx-auto  
                     tracking-tighter 
                     border-none
@@ -364,10 +378,10 @@ const DesignConfigurator = ({
                     ${selectedProduct.text2Position} 
                     ${selectedProduct.text2PositionLeft} 
                     mx-auto w-2/3 tracking-tighter 
-                    border-none text-center 
+                    border-none 
+                    text-center 
                     bg-transparent 
                     whitespace-normal
-
                     ${selectedProduct.text2Color} 
                     outline-none
                     resize-none
@@ -480,7 +494,7 @@ const DesignConfigurator = ({
                       color: val,
                     }))
                   }}>
-                  <Label>Design: {options.color.label}</Label>
+                  {/* <Label>Design: {options.color.label}</Label> */}
                   <div className='mt-3 flex items-center space-x-3'>
                     {COLORS.map((color) => (
                       <RadioGroup.Option

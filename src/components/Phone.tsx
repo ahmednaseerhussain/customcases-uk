@@ -25,7 +25,7 @@ const Phone = ({ imgSrc, className, dark = false,  ...props }: PhoneProps) => {
       {/* <h1>Selected Case: {selectedCase.label}</h1> */}
       <img
         // src={selectedCase.image}
-        src='/phone.png'
+        src='/solid_11_pro.png'
         className='pointer-events-none z-50 select-none'
         alt='phone image'
       />

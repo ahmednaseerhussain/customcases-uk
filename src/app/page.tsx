@@ -131,25 +131,25 @@ export default function Home() {
       <section className='bg-slate-100 grainy-dark py-24'>
         <MaxWidthWrapper className='flex flex-col items-center gap-16 sm:gap-32'>
           <div className='flex flex-col lg:flex-row items-center gap-4 sm:gap-6'>
-            <h2 className='order-1 mt-2 tracking-tight text-center text-balance !leading-tight font-bold text-5xl md:text-6xl text-gray-900'>
+            <h2 className='order-1 mt-2 tracking-tight text-center text-balance !leading-tight font-[200] text-5xl md:text-6xl text-gray-900'>
               What our{' '}
-              <span className='relative px-2'>
+              <span className='relative px-2 text-gradient font-[200]'>
                 customers{' '}
-                <Icons.underline className='hidden sm:block pointer-events-none absolute inset-x-0 -bottom-6 text-green-500' />
+                <Icons.underline className='hidden sm:block pointer-events-none absolute inset-x-0 -bottom-6 text-pink-300' />
               </span>{' '}
               say
             </h2>
-            <img src='/snake-2.png' className='w-24 order-0 lg:order-2' />
+            
           </div>
 
           <div className='mx-auto grid max-w-2xl grid-cols-1 px-4 lg:mx-0 lg:max-w-none lg:grid-cols-2 gap-y-16'>
             <div className='flex flex-auto flex-col gap-4 lg:pr-8 xl:pr-20'>
               <div className='flex gap-0.5 mb-2'>
-                <Star className='h-5 w-5 text-green-600 fill-green-600' />
-                <Star className='h-5 w-5 text-green-600 fill-green-600' />
-                <Star className='h-5 w-5 text-green-600 fill-green-600' />
-                <Star className='h-5 w-5 text-green-600 fill-green-600' />
-                <Star className='h-5 w-5 text-green-600 fill-green-600' />
+                <Star className='h-5 w-5 text-pink-300 fill-pink-300' />
+                <Star className='h-5 w-5 text-pink-300 fill-pink-300' />
+                <Star className='h-5 w-5 text-pink-300 fill-pink-300' />
+                <Star className='h-5 w-5 text-pink-300 fill-pink-300' />
+                <Star className='h-5 w-5 text-pink-300 fill-pink-300' />
               </div>
               <div className='text-lg leading-8'>
                 <p>
@@ -171,7 +171,7 @@ export default function Home() {
                 <div className='flex flex-col'>
                   <p className='font-semibold'>Jonathan</p>
                   <div className='flex gap-1.5 items-center text-zinc-600'>
-                    <Check className='h-4 w-4 stroke-[3px] text-green-600' />
+                    <Check className='h-4 w-4 stroke-[3px] text-pink-300' />
                     <p className='text-sm'>Verified Purchase</p>
                   </div>
                 </div>
@@ -181,11 +181,11 @@ export default function Home() {
             {/* second user review */}
             <div className='flex flex-auto flex-col gap-4 lg:pr-8 xl:pr-20'>
               <div className='flex gap-0.5 mb-2'>
-                <Star className='h-5 w-5 text-green-600 fill-green-600' />
-                <Star className='h-5 w-5 text-green-600 fill-green-600' />
-                <Star className='h-5 w-5 text-green-600 fill-green-600' />
-                <Star className='h-5 w-5 text-green-600 fill-green-600' />
-                <Star className='h-5 w-5 text-green-600 fill-green-600' />
+              <Star className='h-5 w-5 text-pink-300 fill-pink-300' />
+                <Star className='h-5 w-5 text-pink-300 fill-pink-300' />
+                <Star className='h-5 w-5 text-pink-300 fill-pink-300' />
+                <Star className='h-5 w-5 text-pink-300 fill-pink-300' />
+                <Star className='h-5 w-5 text-pink-300 fill-pink-300' />
               </div>
               <div className='text-lg leading-8'>
                 <p>
@@ -208,7 +208,7 @@ export default function Home() {
                 <div className='flex flex-col'>
                   <p className='font-semibold'>Josh</p>
                   <div className='flex gap-1.5 items-center text-zinc-600'>
-                    <Check className='h-4 w-4 stroke-[3px] text-green-600' />
+                    <Check className='h-4 w-4 stroke-[3px] text-pink-300' />
                     <p className='text-sm'>Verified Purchase</p>
                   </div>
                 </div>
@@ -225,10 +225,10 @@ export default function Home() {
       <section>
         <MaxWidthWrapper className='py-24'>
           <div className='mb-12 px-6 lg:px-8'>
-            <div className='mx-auto max-w-2xl sm:text-center'>
-              <h2 className='order-1 mt-2 tracking-tight text-center text-balance !leading-tight font-bold text-5xl md:text-6xl text-gray-900'>
+            <div className='mx-auto max-w-2xl font-300 sm:text-center'>
+              <h2 className='order-1 mt-2 tracking-tight text-center font-[200] text-balance !leading-tight  text-5xl md:text-6xl text-gray-900'>
                 Upload your photo and get{' '}
-                <span className='relative px-2 bg-green-600 text-white'>
+                <span className='text-gradient font-[400]'>
                   your own case
                 </span>{' '}
                 now
@@ -256,19 +256,19 @@ export default function Home() {
 
           <ul className='mx-auto mt-12 max-w-prose sm:text-lg space-y-2 w-fit'>
             <li className='w-fit'>
-              <Check className='h-5 w-5 text-green-600 inline mr-1.5' />
+              <Check className='h-5 w-5 text-pink-300 inline mr-1.5' />
               High-quality silicone material
             </li>
             <li className='w-fit'>
-              <Check className='h-5 w-5 text-green-600 inline mr-1.5' />
+              <Check className='h-5 w-5 text-pink-300 inline mr-1.5' />
               Scratch- and fingerprint resistant coating
             </li>
             <li className='w-fit'>
-              <Check className='h-5 w-5 text-green-600 inline mr-1.5' />
+              <Check className='h-5 w-5 text-pink-300 inline mr-1.5' />
               Wireless charging compatible
             </li>
             <li className='w-fit'>
-              <Check className='h-5 w-5 text-green-600 inline mr-1.5' />5 year
+              <Check className='h-5 w-5 text-pink-300 inline mr-1.5' />5 year
               print warranty
             </li>
 

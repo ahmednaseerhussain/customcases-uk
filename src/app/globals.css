@@ -110,4 +110,28 @@ background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAI
        url('/fonts/JI-Chunky-Caps.ttf.eot?#iefix') format('embedded-opentype');
   font-weight: normal;
   font-style: normal;
+
+  
+}
+
+@font-face {
+  font-family: "The-Season";
+  src: url("https://db.onlinewebfonts.com/t/9366bd460113d8bf675fd2bdfe1ce764.eot");
+  src: url("https://db.onlinewebfonts.com/t/9366bd460113d8bf675fd2bdfe1ce764.eot?#iefix")format("embedded-opentype"),
+  url("https://db.onlinewebfonts.com/t/9366bd460113d8bf675fd2bdfe1ce764.woff2")format("woff2"),
+  url("https://db.onlinewebfonts.com/t/9366bd460113d8bf675fd2bdfe1ce764.woff")format("woff"),
+  url("https://db.onlinewebfonts.com/t/9366bd460113d8bf675fd2bdfe1ce764.ttf")format("truetype"),
+  url("https://db.onlinewebfonts.com/t/9366bd460113d8bf675fd2bdfe1ce764.svg#The Seasons")format("svg");
+}
+
+  
+
+
+@font-face {
+  font-family: 'The-Season2';
+  src: url('/fonts/theseasons-ltit.woff') format('woff'),
+       url('/fonts/theseasons-ltit.eot'),
+       url('/fonts/theseasons-ltit.eot?#iefix') format('embedded-opent');
+  font-weight: normal;
+  font-style: normal;
 }
