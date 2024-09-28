@@ -3,30 +3,29 @@ import React, { useState } from 'react';
 import { useParams } from "next/navigation";
 import { products } from "@/config/products";
 import Link from "next/link";
-import { Star, Heart, ShoppingCart, Truck, Package, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Star, Heart, ShoppingCart, Truck, Package, ArrowLeft, ArrowRight, Box } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import { Box } from 'lucide-react';
 import '@google/model-viewer';
 
 export default function ProductDetails() {
   const { id } = useParams();
   const product = products.find((product) => product.id === parseInt(id as string));
 
+  // Avoid using hooks conditionally by defining them outside of conditionals
+  const [currentImage, setCurrentImage] = useState(0);
+  const [loading3D, setLoading3D] = useState(true);
+
   if (!product) {
     return <p>Product not found</p>;
   }
-
-  const [currentImage, setCurrentImage] = useState(0);
-  const [loading3D, setLoading3D] = useState(true); // Loading state for 3D model
 
   const images = [
     product.productsimg1,
     product.productsimg2,
     product.productsimg3,
-    <div className="w-full flex items-center justify-center h-full">
+    <div className="w-full flex items-center justify-center h-full" key="3d-model">
       {loading3D && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-12 h-12 border-4 border-t-4 border-gray-200 rounded-full animate-spin"></div>
@@ -41,7 +40,7 @@ export default function ProductDetails() {
         poster="/poster.webp"
         shadow-intensity="1"
         style={{ width: '100%', height: '350px' }}
-        onLoad={() => setLoading3D(false)} // Remove loader once the model loads
+        onLoad={() => setLoading3D(false)}
         className='w-full h-full'
       >
         <div className="progress-bar hide" slot="progress-bar">
@@ -109,11 +108,9 @@ export default function ProductDetails() {
                         className={`w-20 h-20 object-cover rounded-md cursor-pointer ${index === currentImage ? 'border-2 border-pink-300' : ''}`}
                       />
                     ) : (
-                      <div className={`w-20 h-20 rounded-md cursor-pointer items-center justify-center flex bg-white/90  border-blue-200/5 bg-gradient-to-tr from-blue-300/5 to-pink-300/5 backdrop-blur-lg transition-all shadow-md ${index === currentImage ? 'border-2 border-pink-300' : ''}`}>
-                        <Box size={15}
-                        className='relative -top-6 -left-1 !px-0'/>
-                        <img src='/poster.webp' alt="3D Model Thumbnail -left-2" className=" h-full" >
-                        </img>
+                      <div className={`w-20 h-20 rounded-md cursor-pointer items-center justify-center flex bg-white/90 border-blue-200/5 bg-gradient-to-tr from-blue-300/5 to-pink-300/5 backdrop-blur-lg transition-all shadow-md ${index === currentImage ? 'border-2 border-pink-300' : ''}`}>
+                        <Box size={15} className='relative -top-6 -left-1 !px-0'/>
+                        <img src='/poster.webp' alt="3D Model Thumbnail" className="h-full" />
                       </div>
                     )}
                   </div>
