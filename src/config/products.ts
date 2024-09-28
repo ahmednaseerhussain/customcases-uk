@@ -1,6 +1,6 @@
 import { fontFamily } from "html2canvas/dist/types/css/property-descriptors/font-family"
 import { Qwitcher_Grypen, Aladin, Questrial, ABeeZee, Parisienne } from "next/font/google"
-const qwitcherGrypenFont = Qwitcher_Grypen({ subsets: ['latin'], weight:['400']});
+const qwitcherGrypenFont = Qwitcher_Grypen({ subsets: ['latin'], weight: ['400']});
 const aladinFont = Aladin({subsets: ['latin-ext'], weight: ['400'] })
 const questrial = Questrial({subsets: ['latin'], weight: ['400']})
 const aBeeZee = ABeeZee({subsets:['latin'], weight:['400']})
@@ -8,6 +8,34 @@ const greatVibes  = Parisienne({subsets:['latin'], weight:['400']})
 const chunky = 'font-chunky'
 const season = 'font-season'
 const seasonIT = 'font-seasonIT'
+
+
+export interface Product {
+  id: number;
+  requiresImage: boolean;
+  title: string;
+  description: string;
+  category: {
+    device: string;
+    customize: string;
+    magsafe: boolean;
+    collection: string;
+    theme: string;
+  };
+  imageUrl: string;
+  price: string;
+  discountedPrice: string;
+  fontname: string;
+  fontname2?: string;
+  frameX: number;
+  frameY: number;
+  rounded: string;
+  deviceSeries: string[];
+  devices: string[];
+  caseType: string[];
+  customization: string[];
+  designColour: string[];
+}
 export const PRODUCT_PRICES = {
   material: {
     silicone: 0,
@@ -27,9 +55,15 @@ export const products = [
     requiresImage: true,
     title: "1 Picture Case",
     description: "This is the description for Product 1",
+    category: {device: 'iphone', customize: 'picture-only', magsafe: true, collection: 'picture-cases', theme: '1-picture'  },
+    productsimg1: '/product4/product-img-1.png', 
+    productsimg2: '/product4/product-img-2.png', 
+    productsimg3: '/product4/product-img-3.png', 
+    productsimg4: '/product-img-1.png', 
     imageUrl: "/product-1.png",
+    isImage2: false,
     price: "32.0$",
-    discountedPrice: "29.9$",
+    discountedPrice: "19.9$",
     isFrame: false,
     fontname2: season,
     fontname: seasonIT,
@@ -63,15 +97,27 @@ export const products = [
     colorOptions2: '',
     colorOptions3: '',
     colorOptions4: '',
+
+    deviceSeries: ['iphone 13'], 
+    devices: ['iphone'],
+    caseType: ['polycarbonate'],
+    customization: ['picture-&-text'],
+    designColour: ['white']
   },
   {
     id: 1,
     requiresImage: true,
     title: "Flowery Season",
     description: "This is the description for Product 3",
+    category: {device: 'iphone', customize: 'picture-&-text', magsafe: true, collection: 'polaride', theme: 'flowery'  },
+    productsimg1: '/product4/product-img-1.png', 
+    productsimg2: '/product4/product-img-2.png', 
+    productsimg3: '/product4/product-img-3.png', 
+    productsimg4: '/product-img-1.png', 
     imageUrl: "/product-6.png",
+    imageUrl2: '',
     price: "32.0$",
-    discountedPrice: "29.9$",
+    discountedPrice: "19.9$",
     isFrame: false,
     fontname: chunky,
     fontname2: aBeeZee.className,
@@ -105,6 +151,12 @@ export const products = [
     colorOptions2: '/product5/blue.png',
     colorOptions3: '/product5/rose.png',
     colorOptions4: '/product5/green.png',
+
+    deviceSeries: ['iphone 13'], 
+    devices: ['iphone'],
+    caseType: ['polycarbonate'],
+    customization: ['picture-&-text'],
+    designColour: ['white']
   },
   
   {
@@ -112,9 +164,15 @@ export const products = [
     requiresImage: true,
     title: "Beach Memories",
     description: "This is the description for Product 3",
+    category: {device: 'iphone', customize: 'picture-&-text', magsafe: true, collection: 'polaride', theme: 'summer'  },
+    productsimg1: './product-img-1.png', 
+    productsimg2: './product-img-1.png', 
+    productsimg3: './product-img-1.png', 
+    productsimg4: './product-img-1.png', 
     imageUrl: "/product-3.png",
+    imageUrl2: "/product-1.png",
     price: "32.0$",
-    discountedPrice: "29.9$",
+    discountedPrice: "32.9$",
     isFrame: false,
     fontname: qwitcherGrypenFont.className,
     fontname2: qwitcherGrypenFont.className,
@@ -148,15 +206,27 @@ export const products = [
     colorOptions3: '/product2/red.png',
     colorOptions2: '/product2/blue.png',
     colorOptions4: '/product2/green.png',
+
+    deviceSeries: ['iphone 12'], 
+    devices: ['iphone'],
+    caseType: ['polycarbonate'],
+    customization: ['picture-&-text'],
+    designColour: ['white']
   },
   {
     id: 3,
     requiresImage: true,
     title: "Flowery Season",
     description: "This is the description for Product 3",
+    category: {device: 'iphone', customize: 'picture-&-text', magsafe: true, collection: 'polaride', theme: 'flowery'  },
+    productsimg1: './product-img-1.png', 
+    productsimg2: './product-img-1.png', 
+    productsimg3: './product-img-1.png', 
+    productsimg4: './product-img-1.png', 
     imageUrl: "/product-4.png",
+    imageUrl2: "/product-1.png",
     price: "32.0$",
-    discountedPrice: "29.9$",
+    discountedPrice: "32.9$",
     isFrame: false,
     fontname: greatVibes.className,
     fontname2: aBeeZee.className,
@@ -190,6 +260,12 @@ export const products = [
     colorOptions2: '/product3/blue.png',
     colorOptions3: '/product3/rose.png',
     colorOptions4: '/product3/green.png',
+
+    deviceSeries: ['iphone 12'], 
+    devices: ['iphone'],
+    caseType: ['polycarbonate'],
+    customization: ['picture-&-text'],
+    designColour: ['pink']
     
   },
   {
@@ -197,9 +273,15 @@ export const products = [
     requiresImage: true,
     title: "Flowery Season",
     description: "This is the description for Product 3",
+    category: {device: 'iphone', customize: 'picture-&-text', magsafe: true, collection: 'polaride', theme: 'flowery'  },
+    productsimg1: './product-img-1.png', 
+    productsimg2: './product-img-1.png', 
+    productsimg3: './product-img-1.png', 
+    productsimg4: './product-img-1.png', 
     imageUrl: "/product-5.png",
+    imageUrl2: "/product-1.png",
     price: "32.0$",
-    discountedPrice: "29.9$",
+    discountedPrice: "19.9$",
     isFrame: false,
     fontname: chunky,
     fontname2: aBeeZee.className,
@@ -233,13 +315,25 @@ export const products = [
     colorOptions2: '/product4/blue.png',
     colorOptions3: '/product4/rose.png',
     colorOptions4: '/product4/green.png',
+
+    deviceSeries: ['iphone 13'], 
+    devices: ['iphone'],
+    caseType: ['polycarbonate'],
+    customization: ['picture-&-text'],
+    designColour: ['pink']
   },
   {
     id: 5,
     requiresImage: true,
     title: "Feel the Music",
     description: "This is the description for Product 2",
+    category: {device: 'iphone', customize: 'picture-&-text', magsafe: true, collection: 'polaride', theme: 'music'  },
+    productsimg1: './product-img-1.png', 
+    productsimg2: './product-img-1.png', 
+    productsimg3: './product-img-1.png', 
+    productsimg4: './product-img-1.png', 
     imageUrl: "/product-2.png",
+    imageUrl2: "/product-1.png",
     price: "32.0$",
     discountedPrice: "29.9$",
     isFrame: false,
@@ -275,13 +369,25 @@ export const products = [
     colorOptions2: '/product1/blue.png',
     colorOptions3: '/product1/rose.png',
     colorOptions4: '/product1/green.png',
+
+    deviceSeries: ['iphone 13'], 
+    devices: ['iphone'],
+    caseType: ['polycarbonate'],
+    customization: ['picture-&-text'],
+    designColour: ['white']
   },  
   {
     id: 6,
     requiresImage: true,
     title: "Flowery Season",
     description: "This is the description for Product 3",
+    category: {device: 'iphone', customize: 'picture-&-text', magsafe: true, collection: 'polaride', theme: 'flowery'  },
+    productsimg1: './product-img-1.png', 
+    productsimg2: './product-img-1.png', 
+    productsimg3: './product-img-1.png', 
+    productsimg4: './product-img-1.png', 
     imageUrl: "/product-7.png",
+    imageUrl2: "/product-1.png",
     price: "32.0$",
     discountedPrice: "29.9$",
     isFrame: false,
@@ -317,13 +423,25 @@ export const products = [
     colorOptions2: '/product4/blue.png',
     colorOptions3: '/product4/rose.png',
     colorOptions4: '/product4/green.png',
+
+    deviceSeries: ['iphone 12'], 
+    devices: ['iphone'],
+    caseType: ['polycarbonate'],
+    customization: ['picture-&-text'],
+    designColour: ['pink']
   },
   {
     id: 7,
     requiresImage: false,
     title: "Flowery Season",
     description: "This is the description for Product 3",
+    category: {device: 'iphone', customize: 'none', magsafe: true, collection: 'leather', theme: 'dark'  },
+    productsimg1: './product-img-1.png', 
+    productsimg2: './product-img-1.png', 
+    productsimg3: './product-img-1.png', 
+    productsimg4: './product-img-1.png', 
     imageUrl: "/product-8.png",
+    imageUrl2: "/product-1.png",
     price: "32.0$",
     discountedPrice: "29.9$",
     isFrame: false,
@@ -359,5 +477,11 @@ export const products = [
     colorOptions2: '/product6/blue.png',
     colorOptions3: '/product6/rose.png',
     colorOptions4: '/product6/green.png',
+
+    deviceSeries: ['iphone 12'], 
+    devices: ['iphone'],
+    caseType: ['polycarbonate'],
+    customization: ['none'],
+    designColour: ['3 color']
   },
 ] as const

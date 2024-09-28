@@ -12,7 +12,7 @@ import Link from 'next/link'
 
 export default function Home() {
   return (
-    <div className='glassmorphism'>
+    <div className=''>
       <section>
         <MaxWidthWrapper className='pb-0 pt-2 lg:grid lg:grid-cols-3 sm:pb-0 lg:gap-x-0 xl:gap-x-8 lg:pt-1 xl:pt-16 lg:pb-5'>
           <div className='col-span-2 px-6 lg:px-0 lg:pt-0'>
@@ -128,7 +128,7 @@ export default function Home() {
       </div>
       {/* value proposition section */}
         {/* <CarouselPlugin/> */}
-      <section className='bg-slate-100 grainy-dark py-24'>
+      <section className='bg-pink-100/20 py-24'>
         <MaxWidthWrapper className='flex flex-col items-center gap-16 sm:gap-32'>
           <div className='flex flex-col lg:flex-row items-center gap-4 sm:gap-6'>
             <h2 className='order-1 mt-2 tracking-tight text-center text-balance !leading-tight font-[200] text-5xl md:text-6xl text-gray-900'>

@@ -70,15 +70,13 @@ export default function BasicGrid() {
                 </h1>
               </div>
               <div className="flex justify-center mt-6 sm:mt-8">
-                <Link
-                  href="/products"
-                  className={buttonVariants({
-                    size: 'lg',
-                    variant: 'gradient',
-                    className: 'text-white flex items-center',
-                  })}
-                >
-                  Discover Now <ArrowRight className="h-4 w-4 ml-1.5" />
+              <Link
+                  href='/collections'
+                  className='hidden sm:flex items-center gap-1 rounded-xl bg-gradient-to-tr from-pink-300 to-blue-300 p-0.5 shadow-lg'>
+                  <button className="flex-1  bg-white px-2.5 py-2 rounded-[11px] text-[16px] flex items-center gap-1">
+                  Discover Now
+                 <ArrowRight className='ml-1.5 h-5 w-5' />
+                </button>
                 </Link>
               </div>
             </div>
