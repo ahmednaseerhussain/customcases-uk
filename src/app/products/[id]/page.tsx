@@ -32,7 +32,7 @@ export default function ProductDetails() {
         </div>
       )}
       <model-viewer
-        src="/iPhone15Pro-FlexCase-2face4.glb"
+        src={product.productsimg4}
         ar
         ar-modes="webxr scene-viewer quick-look"
         camera-controls
@@ -46,9 +46,6 @@ export default function ProductDetails() {
         <div className="progress-bar hide" slot="progress-bar">
           <div className="update-bar"></div>
         </div>
-        <button slot="ar-button" id="ar-button">
-          View in your space
-        </button>
         <div id="ar-prompt" className='pt-0 px-10'>
           <img src="https://modelviewer.dev/shared-assets/icons/hand.png" alt="AR Prompt" />
         </div>
@@ -57,7 +54,7 @@ export default function ProductDetails() {
   ];
 
   return (
-    <MaxWidthWrapper>
+    <MaxWidthWrapper className=''>
       <div className="min-h-screen pt-8">
         <div className="text-sm breadcrumbs mb-4 px-8">
           <ul>
@@ -66,7 +63,7 @@ export default function ProductDetails() {
           </ul>
         </div>
         <main className="container mx-auto py-8 pt-8 border-t">
-          <div className="flex flex-col lg:flex-row gap-8 justify-between bg-white">
+          <div className="flex flex-col lg:flex-row gap-8 justify-between bg-white/50 backdrop-blur-lg">
             {/* Product Images */}
             <div className="lg:w-2/4 ">
               <div className="relative flex items-center justify-center">
