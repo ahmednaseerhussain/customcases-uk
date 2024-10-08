@@ -9,7 +9,7 @@ import { constructMetadata } from '@/lib/utils'
 
  
 
-const recursive = Recursive({ subsets: ['latin'] })
+// const recursive = Recursive({ subsets: ['latin'] })
 
 export const metadata = constructMetadata()
 
@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={recursive.className}>
+      <body>
         <Navbar />
 
         <main className='flex grainy-light flex-col min-h-[calc(100vh-3.5rem-1px)]'>

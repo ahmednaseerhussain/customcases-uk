@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { Badge, ChevronDown, ChevronUp } from 'lucide-react';
 import { products, Product } from "@/config/products";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -217,7 +217,7 @@ export default function ProductDetails() {
 
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {sortedProducts.map((product) => (
-              <div key={product.id} className="hover:zoom-in-50 border rounded-lg overflow-hidden  bg-white/100 border-blue-200/25 bg-gradient-to-tr from-blue-300/15 to-pink-300/5 backdrop-blur-lg transition-all shadow-md">
+              <div key={product.id} className="hover:zoom-in-50 border flex justify-center items-center rounded-lg overflow-hidden  bg-white/100 border-blue-200/25 bg-gradient-to-tr from-blue-300/15 to-pink-300/5 backdrop-blur-lg transition-all shadow-md">
                 <Link href={`/products/${product.id}`}>
                 <div className="p-4 flex flex-col items-center gap-2">
                   <img
@@ -225,9 +225,9 @@ export default function ProductDetails() {
                     alt={product.title}
                     className="object-cover w-36 justify-center flex"
                   />
-                  <h3 className="font-semibold">{product.title}</h3>
+                  <h3 className="font-semibold flex justify-center items-center text-center">{product.title}</h3>
                   
-                  <div className="mt-2 flex justify-between">
+                  <div className="mt-2 flex justify-center items-center">
                     <span className="font-bold">{product.discountedPrice}</span>
                     <span className="text-sm line-through text-gray-500">{product.price}</span>
                   </div>
@@ -236,7 +236,7 @@ export default function ProductDetails() {
               </div>
             ))}
           </div>
-        </div>
+          </div>
       </div>
     </div>
     </MaxWidthWrapper>

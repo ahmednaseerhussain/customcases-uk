@@ -42,8 +42,8 @@ const Navbar = async () => {
                 <Link
                   href='/configure/upload'
                   className='hidden sm:flex items-center gap-1 rounded-xl bg-gradient-to-tr from-pink-300 to-blue-300 p-0.5 shadow-lg'>
-                  <button className="flex-1  bg-white px-2 py-1 rounded-[11px] text-sm flex items-center gap-1">
-                  Create case
+                  <button className="  bg-white px-2 py-1 rounded-[11px] text-sm flex items-center gap-1 font-semibold">
+                  Create Case
                  <ArrowRight className='ml-1.5 h-5 w-5' />
                 </button>
                 </Link>
@@ -77,7 +77,7 @@ const Navbar = async () => {
                     className='hidden sm:flex items-center gap-1 rounded-lg bg-gradient-to-tr from-pink-300 to-blue-300 p-0.5 shadow-lg'
                     
                   >
-                  <button className="flex-1  bg-white px-2 py-1 rounded-lg text-sm flex items-center gap-1">
+                  <button className=" bg-white px-2 py-1 rounded-lg text-sm flex justify-center items-center gap-1 font-semibold">
                   Create case
                  <ArrowRight className='ml-1.5 h-5 w-5' />
                 </button>

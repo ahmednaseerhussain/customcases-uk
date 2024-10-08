@@ -7,7 +7,9 @@ import { cn, formatPrice } from '@/lib/utils'
 import NextImage from 'next/image'
 import { Rnd } from 'react-rnd'
 import { RadioGroup } from '@headlessui/react'
+import domtoimage from 'dom-to-image';
 import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import { useEffect, useRef, useState } from 'react'
 import {
   CASES,
@@ -33,6 +35,16 @@ import { saveConfig as _saveConfig, SaveConfigArgs } from './actions'
 import { useRouter, useSearchParams } from 'next/navigation'
 // import { CaseColor, CaseDesign } from '@prisma/client'
 import { boolean, string } from 'zod'
+import { Qwitcher_Grypen, Aladin, Questrial, ABeeZee, Parisienne } from "next/font/google"
+const qwitcherGrypenFont = Qwitcher_Grypen({ subsets: ['latin'], weight: ['400']}); 
+  const aladinFont = Aladin({subsets: ['latin-ext'], weight: ['400'] })
+  const questrial = Questrial({subsets: ['latin'], weight: ['400']})
+  const aBeeZee = ABeeZee({subsets:['latin'], weight:['400']})
+  const greatVibes  = Parisienne({subsets:['latin'], weight:['400']})
+  const chunky = 'font-chunky'
+  const season = 'font-season'
+  const seasonIT = 'font-seasonIT'
+
 
 interface CaseOption {
   label: string;
@@ -85,6 +97,7 @@ const DesignConfigurator = ({
     isModel: true,
     isFrame: false,
     isText: false,
+    isText2: false,
     isRnd: false,
     needsFill: true,
     setImageWidth: 0,
@@ -113,6 +126,7 @@ const DesignConfigurator = ({
   
   const [isFrameAdded, setIsFrameAdded] = useState<boolean>(false);
   const [isTextAdded, setIsTextAdded] = useState(selectedProduct.isText);
+  const [isTextAdded2, setIsTextAdded2] = useState(selectedProduct.isText2);
   const [isModelTrue, setIsModelTrue] = useState(selectedProduct.isModel);
   const [isAssetTrue, setIsAssetTrue] = useState(selectedProduct.isAsset);
   const [isImageTrue, setIsImageTrue] = useState(selectedProduct.isImage);
@@ -164,7 +178,6 @@ const DesignConfigurator = ({
       setIsRndAdded(selectedProduct.isRnd);
     }
   }, [productId] );
-  console.log(productId)
 
 
   const [cases, setCases] = useState(CASES[MODELS.options[0].value as PhoneModel])
@@ -266,26 +279,55 @@ const DesignConfigurator = ({
     setIsFrameAdded(selection);
   };
 
-  const savedImg = useRef(null);
+  const savedImg = useRef<HTMLDivElement | null>(null);
+  const [imagesLoadedCount, setImagesLoadedCount] = useState(0);
+  const totalImages = 3; // Adjust this to the number of images you're using
 
-  const saveDivAsImage = async () => {
-    if (savedImg.current) {
-      const canvas = await html2canvas(savedImg.current);
-      const dataURL = canvas.toDataURL('image/png');
-      localStorage.setItem('divImage', dataURL);
-    }
-  }; 
-  // const updatedColors = COLORS.map(color => ({
-  //   ...color,
-  //   image: selectedProduct[`colorOptions${color.image}`] || color.image,
-  // }));
+  const handleImageLoad = () => {
+    setImagesLoadedCount(prev => prev + 1);
+    console.log("Image loaded. Total loaded:", imagesLoadedCount + 1);
+  };
+
+  // Capture and download as image
+  const downloadAsImage = () => {
+    document.fonts.ready.then(() => {
+      console.log('All fonts are loaded');
+
+      if (savedImg.current) {
+        html2canvas(savedImg.current, {
+          backgroundColor: null, // For transparency if needed
+          useCORS: true,
+          logging: true,
+          allowTaint: true,
+          
+        }).then(canvas => {
+          const imgData = canvas.toDataURL('image/png');
+          const pdf = new jsPDF('p', 'mm', 'a4'); // A4 size PDF in portrait
+
+          // Convert canvas to width and height in mm
+          const width = pdf.internal.pageSize.getWidth();
+          const height = (canvas.height * width) / canvas.width;
+
+          pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+
+          // Save the PDF
+          pdf.save('downloaded-content.pdf');
+        }).catch(error => {
+          console.error('Failed to create the image', error);
+        });
+      }
+    }).catch(error => {
+      console.error('Font loading failed', error);
+    });
+  };
+
   return (
     <div className='relative mt-20 grid grid-cols-1 lg:grid-cols-3 mb-20 pb-20'>
       <div
 
         ref={containerRef}
-        className='relative h-[37.5rem] overflow-hidden col-span-2 w-full max-w-4xl flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'>
-        <div ref={savedImg} className='relative w-60 bg-opacity-50 pointer-events-none aspect-[896/1831]'>
+        className='relative h-[37.5rem] overflow-hidden col-span-2 w-full max-w-4xl flex items-center justify-center rounded-lg border-2 border-dashed  bg-white/100 border-blue-200/25 bg-gradient-to-tr from-blue-300/15 to-pink-300/5 backdrop-blur-lg transition-all shadow-md p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'>
+        <div ref={savedImg} className={`relative w-60 bg-opacity-50 pointer-events-none aspect-[896/1831]`}>
           <AspectRatio
             ref={phoneCaseRef}
             ratio={896 / 1831}
@@ -295,6 +337,7 @@ const DesignConfigurator = ({
               fill
               alt='phone image'
               src={options.caseImg.image}
+              onLoad={handleImageLoad}
               className='pointer-events-none z-[49] select-none'
             />
             )}  
@@ -306,6 +349,7 @@ const DesignConfigurator = ({
                 {...(selectedProduct.needsFill ? { fill: true } : { width: selectedProduct.setImageWidth, height: selectedProduct.setImageHeight })}
                 alt='your image'
                 style={{ objectFit: 'cover' }}
+                onLoad={handleImageLoad}
                 
                 
                 className={` pointer-events-none absolute  object-cover inset-10  opacity-93 ${selectedProduct.rounded} ${selectedProduct.top} ${selectedProduct.left}`}
@@ -317,7 +361,7 @@ const DesignConfigurator = ({
                 src={selectedProduct.assetimage}
                 height={selectedProduct.assetimageHeight}
                 width={selectedProduct.assetimageWidth}
-                
+                onLoad={handleImageLoad}
                 alt=''
                 className ={`pointer-events-none object-cover absolute inset-0 ${selectedProduct.assetimagePosition} z-[50]`}
               />
@@ -336,6 +380,7 @@ const DesignConfigurator = ({
               src={options.color.image}
               fill
               alt='your image'
+              onLoad={handleImageLoad}
               className='pointer-events-none rounded-[35px]'
             />
 
@@ -345,7 +390,7 @@ const DesignConfigurator = ({
                   placeholder={selectedProduct.placeholderText1}
                   value={inputValue}
                   className={` 
-                    ${selectedProduct.fontname} 
+                    ${selectedProduct.fontname}
                     absolute 
                     break-words 
                     mx-auto  
@@ -367,6 +412,7 @@ const DesignConfigurator = ({
 
 
                 />
+                {isTextAdded2 && (
                 <textarea
                   placeholder={selectedProduct.placeholderText2}
                   value={inputValue2}
@@ -374,7 +420,7 @@ const DesignConfigurator = ({
                     ${selectedProduct.fontname2} 
                     absolute 
                     break-words
-                    inset-x-0 z-50 
+                    inset-x-0 z-50
                     ${selectedProduct.text2Position} 
                     ${selectedProduct.text2PositionLeft} 
                     mx-auto w-2/3 tracking-tighter 
@@ -391,6 +437,7 @@ const DesignConfigurator = ({
 
 
                 />
+              )}
               </div>
             )}
             
@@ -481,7 +528,9 @@ const DesignConfigurator = ({
             <h2 className='tracking-tight font-bold text-3xl'>
               Customize your case
             </h2>
-            <button onClick={saveDivAsImage}>Save as Image</button>
+            <button onClick={downloadAsImage}>Download Image
+            <p>Images loaded: {imagesLoadedCount}/{totalImages}</p>
+            </button>
             <div className='w-full h-px bg-zinc-200 my-6' />
 
             <div className='relative mt-4 h-full flex flex-col justify-between'>
@@ -575,8 +624,11 @@ const DesignConfigurator = ({
                         minLength={6}
                         maxLength={20}
                         // onSubmit={inputValue}
-                      />
-                      <input
+                        />
+                      </div>
+                      )}
+                      {isTextAdded2 && (
+                        <input
                         type="text"
                         value={inputValue2}
                         onChange={(a) => setInputValue2(a.target.value)}
@@ -587,10 +639,9 @@ const DesignConfigurator = ({
                         maxLength={12}
                         // onSubmit={inputValue2}
                       />
-                    </div>
-                  )}
-
-                </div>
+                      )}                  
+                    
+                      </div>
 
 
                 <div className='relative flex flex-col gap-3 w-full'>

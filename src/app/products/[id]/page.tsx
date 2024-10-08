@@ -8,14 +8,14 @@ import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import '@google/model-viewer';
+import dynamic from 'next/dynamic';
+import { ModelViewer } from '@/components/ModelViewer';
+// const ModelViewer = dynamic(() => import('@/components/ModelViewer'), { ssr: false });
 
 export default function ProductDetails() {
   const { id } = useParams();
   const product = products.find((product) => product.id === parseInt(id as string));
-
-  // Avoid using hooks conditionally by defining them outside of conditionals
   const [currentImage, setCurrentImage] = useState(0);
-  const [loading3D, setLoading3D] = useState(true);
 
   if (!product) {
     return <p>Product not found</p>;
@@ -25,33 +25,13 @@ export default function ProductDetails() {
     product.productsimg1,
     product.productsimg2,
     product.productsimg3,
-    <div className="w-full flex items-center justify-center h-full" key="3d-model">
-      {loading3D && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-12 h-12 border-4 border-t-4 border-gray-200 rounded-full animate-spin"></div>
-        </div>
-      )}
-      <model-viewer
-        src={product.productsimg4}
-        ar
-        ar-modes="webxr scene-viewer quick-look"
-        camera-controls
-        tone-mapping="neutral"
-        poster="/poster.webp"
-        shadow-intensity="1"
-        style={{ width: '100%', height: '350px' }}
-        onLoad={() => setLoading3D(false)}
-        className='w-full h-full'
-      >
-        <div className="progress-bar hide" slot="progress-bar">
-          <div className="update-bar"></div>
-        </div>
-        <div id="ar-prompt" className='pt-0 px-10'>
-          <img src="https://modelviewer.dev/shared-assets/icons/hand.png" alt="AR Prompt" />
-        </div>
-      </model-viewer>
-    </div>
+    <ModelViewer key="3d-model" src={product.productsimg4} poster={product.posterimg3d} />
   ];
+
+  // Find related products based on category
+  const relatedProducts = products.filter((p) =>
+    p.id !== product.id && p.category.device === product.category.device
+  );
 
   return (
     <MaxWidthWrapper className=''>
@@ -107,7 +87,7 @@ export default function ProductDetails() {
                     ) : (
                       <div className={`w-20 h-20 rounded-md cursor-pointer items-center justify-center flex bg-white/90 border-blue-200/5 bg-gradient-to-tr from-blue-300/5 to-pink-300/5 backdrop-blur-lg transition-all shadow-md ${index === currentImage ? 'border-2 border-pink-300' : ''}`}>
                         <Box size={15} className='relative -top-6 -left-1 !px-0'/>
-                        <img src='/poster.webp' alt="3D Model Thumbnail" className="h-full" />
+                        <img src={product.posterimg3d} alt="3D Model Thumbnail" className="h-full" />
                       </div>
                     )}
                   </div>
@@ -164,16 +144,27 @@ export default function ProductDetails() {
               </div>
             </div>
           </div>
+
+          {/* Related Products Section */}
+          <div className="mt-10">
+            <h2 className="text-2xl font-bold mb-4">Related Products</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {relatedProducts
+              .sort(() => 0.5 - Math.random()) // Shuffle the array
+              .slice(0, 6) // Get 4 random products
+              .map((relatedProduct) => (
+                <div key={relatedProduct.id} className="border rounded-md p-4 bg-white shadow-md">
+                  <Link href={`/products/${relatedProduct.id}`}>
+                    <img src={relatedProduct.productsimg1} alt={relatedProduct.title} className="  object-cover rounded-md mb-2" />
+                    <h3 className="text-lg font-semibold">{relatedProduct.title}</h3>
+                    <p className="text-sm text-gray-600">{relatedProduct.price}</p>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
         </main>
       </div>
     </MaxWidthWrapper>
   );
-}
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'model-viewer': any;
-    }
-  }
 }

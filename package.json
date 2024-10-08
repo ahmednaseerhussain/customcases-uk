@@ -37,6 +37,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cropperjs": "^1.6.2",
+    "dom-to-image": "^2.6.0",
     "embla-carousel-autoplay": "^8.2.1",
     "embla-carousel-react": "^8.2.1",
     "fabric": "^6.4.1",
@@ -44,6 +45,7 @@
     "framer-motion": "^11.5.4",
     "gsap": "^3.12.5",
     "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.2",
     "lucide-react": "^0.372.0",
     "next": "14.2.2",
     "next-connect": "^1.0.0",
@@ -65,6 +67,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/dom-to-image": "^2.6.7",
     "@types/node": "^20.16.5",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
