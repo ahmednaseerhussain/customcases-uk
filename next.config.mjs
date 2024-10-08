@@ -4,7 +4,7 @@ const nextConfig = {
     domains: ['utfs.io'],
   },
   experimental: {
-    missingSuspenseWithCSRBailout: true,  // Disable the rule
+    missingSuspenseWithCSRBailout: false,  // Disable the rule
   },
   async headers() {
     return [
